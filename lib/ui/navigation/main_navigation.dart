@@ -14,11 +14,28 @@ abstract class MainNavigationRoutsName{
 }
 
 class MainNavigation{
-  final foutes = <String, Widget Function(BuildContext)>{
+  final routes = <String, Widget Function(BuildContext)>{
     MainNavigationRoutsName.groups: (context) => GroupsWidget(),
     MainNavigationRoutsName.groupsForm: (context) => GroupFormWidget(),
-    // MainNavigationRoutsName.task: (context) => TasksWidget(),
-    // MainNavigationRoutsName.taskForm: (context) => TaskFormWidget(),
   };
 
+  Route<Object> onGenerateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case MainNavigationRoutsName.task:
+        final groupKey = settings.arguments as int;
+        return MaterialPageRoute(
+          builder: (context) => TasksWidget(groupKey: groupKey),
+        );
+      case MainNavigationRoutsName.taskForm:
+        final groupKey = settings.arguments as int;
+        return MaterialPageRoute(
+          builder: (context) {
+            return TaskFormWidget(groupKey: groupKey);
+          },
+        );
+      default:
+        const widget = Text('Navigation error!!!');
+        return MaterialPageRoute(builder: (context) => widget);
+    }
+  }
 }

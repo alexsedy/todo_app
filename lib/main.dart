@@ -18,8 +18,9 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       title: "To Do App",
-      routes: mainNavigation.foutes,
+      routes: mainNavigation.routes,
       initialRoute: MainNavigationRoutsName.groups,
+      onGenerateRoute: mainNavigation.onGenerateRoute,
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
