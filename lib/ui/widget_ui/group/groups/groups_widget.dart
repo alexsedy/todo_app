@@ -47,6 +47,7 @@ class _GroupListWidgetState extends State<_GroupListWidget> {
   @override
   Widget build(BuildContext context) {
     var groupsCount = GroupsWidgetModelProvider.watch(context)?.model.groups.length ?? 0;
+
     return ListView.separated(
       itemBuilder: (BuildContext context, int index) {
         return _GroupRowWidget(indexInList: index);
@@ -70,13 +71,6 @@ class _GroupRowWidget extends StatelessWidget {
     return Slidable(
       endActionPane: ActionPane(motion: const ScrollMotion(),
         children: [
-          // SlidableAction(
-          //   onPressed: (context) => (){},
-          //   backgroundColor: Colors.blueGrey,
-          //   foregroundColor: Colors.white,
-          //   icon: Icons.more_vert,
-          //   label: 'More',
-          // ),
           SlidableAction(
             onPressed: (context) => model.deleteGroup(indexInList),
             backgroundColor: Colors.redAccent,
@@ -95,37 +89,15 @@ class _GroupRowWidget extends StatelessWidget {
   }
 }
 
-//кастомная кнопка с двумя другими кнопками
-
-class CustomFloatingActionButton extends StatefulWidget {
+class CustomFloatingActionButton extends StatelessWidget {
   const CustomFloatingActionButton({super.key});
-
-  @override
-  State<CustomFloatingActionButton> createState() => _CustomFloatingActionButtonState();
-}
-
-class _CustomFloatingActionButtonState extends State<CustomFloatingActionButton> {
-  bool _expanded = false;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Align(
-          alignment: Alignment.bottomRight,
-          child: FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                _expanded = !_expanded;
-              });
-            },
-            tooltip: 'Expand',
-            child: _expanded ? Icon(Icons.close) : Icon(Icons.add),
-          ),
-        ),
-        if (_expanded)
           Positioned(
-            bottom: 80.0,
+            bottom: 0.0,
             right: 0.0,
             child: FloatingActionButton(
               onPressed: () {},
@@ -133,9 +105,8 @@ class _CustomFloatingActionButtonState extends State<CustomFloatingActionButton>
               child: Icon(Icons.notes),
             ),
           ),
-        if (_expanded)
           Positioned(
-            bottom: 150.0,
+            bottom: 80.0,
             right: 0.0,
             child: FloatingActionButton(
               onPressed: () => GroupsWidgetModelProvider.read(context)?.model.addGroupNote(context),

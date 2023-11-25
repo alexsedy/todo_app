@@ -10,7 +10,7 @@ class TaskFormWidgetModel {
 
   TaskFormWidgetModel({required this.groupKey});
 
-  void addTask(BuildContext context) async {
+  void saveTask(BuildContext context) async {
     if(taskText.isEmpty) return;
 
     if(!Hive.isAdapterRegistered(1)) {

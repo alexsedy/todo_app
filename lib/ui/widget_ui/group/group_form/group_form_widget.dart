@@ -33,9 +33,9 @@ class _GroupFormBodyWidget extends StatelessWidget {
         onPressed: () => GroupFormWidgetModelProvider.read(context)?.model.saveGroup(context),
         child: Icon(Icons.done),
       ),
-      body: Center(
+      body: const Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16),
           child: _GroupNameWidget(),
         ),
       ),

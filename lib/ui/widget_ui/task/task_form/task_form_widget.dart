@@ -12,22 +12,11 @@ class TaskFormWidget extends StatefulWidget {
 class _TaskFormWidgetState extends State<TaskFormWidget> {
   late final TaskFormWidgetModel _model;
 
-  //получение ключа новый вараинт
   @override
   void initState() {
     super.initState();
     _model = TaskFormWidgetModel(groupKey: widget.groupKey);
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //
-  //   if (_model == null) {
-  //     final groupKey = ModalRoute.of(context)!.settings.arguments as int;
-  //     _model = TaskFormWidgetModel(groupKey: groupKey);
-  //   }
-  // }
 
 
   @override
@@ -38,49 +27,55 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
   }
 }
 
-
 class _TextFormBodyWidget extends StatelessWidget {
   const _TextFormBodyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Add tasks"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => TaskFormWidgetModelProvider.read(context)?.model.addTask(context),
-        child: const Icon(Icons.done),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: _TaskTextWidget(),
+    final _model = TaskFormWidgetModelProvider.read(context)?.model;
+
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                autofocus: true,
+                textInputAction: TextInputAction.newline,
+                minLines: 1,
+                maxLines: 16,
+                decoration: const InputDecoration(
+                  hintText: "Task",
+                ),
+                onChanged: (value) => _model?.taskText = value,
+                onEditingComplete: () => _model?.saveTask(context),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.cancel_outlined)),
+                  IconButton(
+                      onPressed: () => TaskFormWidgetModelProvider.read(context)?.model.saveTask(context),
+                      icon: Icon(Icons.done)),
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
   }
 }
 
-class _TaskTextWidget extends StatelessWidget {
-  const _TaskTextWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final _model = TaskFormWidgetModelProvider.read(context)?.model;
-
-    return TextField(
-      autofocus: true,
-      textInputAction: TextInputAction.newline,
-      minLines: 1,
-      maxLines: 16,
-      decoration: const InputDecoration(
-        hintText: "Task"
-      ),
-      onChanged: (value) => _model?.taskText = value,
-      onEditingComplete: () => _model?.addTask(context),
-    );
-  }
-}
 
 
