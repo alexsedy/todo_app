@@ -24,8 +24,21 @@ class _GroupsWidgetState extends State<GroupsWidget> {
   }
 }
 
-class _GroupsWidgetBody extends StatelessWidget {
+
+class _GroupsWidgetBody extends StatefulWidget {
   const _GroupsWidgetBody({Key? key}) : super(key: key);
+
+  @override
+  State<_GroupsWidgetBody> createState() => _GroupsWidgetBodyState();
+}
+
+class _GroupsWidgetBodyState extends State<_GroupsWidgetBody> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    const _GroupListWidget(),
+    const SingleTaskWidget(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +46,29 @@ class _GroupsWidgetBody extends StatelessWidget {
       appBar: AppBar(
         title: const Text('To Do List'),
       ),
-      body: const Column(
-        children: [
-          Expanded(child: _GroupListWidget()),
-          Expanded(child: SingleTaskWidget())
+      floatingActionButton: CustomFloatingActionButton(index: _currentIndex),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.folder_copy_outlined),
+            label: 'Groups',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.toc),
+            label: 'Tasks',
+          ),
         ],
       ),
-      floatingActionButton: CustomFloatingActionButton(),
     );
   }
 }
@@ -97,36 +126,31 @@ class _GroupRowWidget extends StatelessWidget {
 }
 
 class CustomFloatingActionButton extends StatelessWidget {
-  const CustomFloatingActionButton({super.key});
+  int index;
+  CustomFloatingActionButton({required this.index, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-          Positioned(
-            bottom: 0.0,
-            right: 0.0,
-            child: FloatingActionButton(
-              onPressed: () {
-                showModalBottomSheet<void>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return SingleTaskFormWidget();
-                  },
-                );
-              },
-              tooltip: 'Add task',
-              child: Icon(Icons.notes),
-            ),
+        if (index == 1)
+          FloatingActionButton(
+            onPressed: () {
+              showModalBottomSheet<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return SingleTaskFormWidget();
+                },
+              );
+            },
+            tooltip: 'Add task',
+            child: Icon(Icons.notes),
           ),
-          Positioned(
-            bottom: 80.0,
-            right: 0.0,
-            child: FloatingActionButton(
-              onPressed: () => GroupsWidgetModelProvider.read(context)?.model.addGroupNote(context),
-              tooltip: 'Add list',
-              child: Icon(Icons.folder),
-            ),
+        if (index == 0)
+          FloatingActionButton(
+            onPressed: () => GroupsWidgetModelProvider.read(context)?.model.addGroupNote(context),
+            tooltip: 'Add list',
+            child: Icon(Icons.folder),
           ),
       ],
     );
