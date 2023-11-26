@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:todo_app/ui/widget_ui/task/single_task_form/single_task_form_widget.dart';
 
+import '../../task/single_task/single_task_widget.dart';
 import 'groups_widget_model.dart';
 
 class GroupsWidget extends StatefulWidget {
@@ -31,7 +33,12 @@ class _GroupsWidgetBody extends StatelessWidget {
       appBar: AppBar(
         title: const Text('To Do List'),
       ),
-      body: const _GroupListWidget(),
+      body: const Column(
+        children: [
+          Expanded(child: _GroupListWidget()),
+          Expanded(child: SingleTaskWidget())
+        ],
+      ),
       floatingActionButton: CustomFloatingActionButton(),
     );
   }
@@ -100,7 +107,14 @@ class CustomFloatingActionButton extends StatelessWidget {
             bottom: 0.0,
             right: 0.0,
             child: FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                showModalBottomSheet<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SingleTaskFormWidget();
+                  },
+                );
+              },
               tooltip: 'Add task',
               child: Icon(Icons.notes),
             ),

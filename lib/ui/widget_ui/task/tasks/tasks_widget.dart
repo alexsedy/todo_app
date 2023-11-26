@@ -87,8 +87,6 @@ class _TaskListRowWidget extends StatelessWidget {
     final model = TasksWidgetModelProvider.read(context)!.model;
     final task = model.tasks[indexInList];
 
-    final icon = task.isDone ? Icons.check_box : Icons.check_box_outline_blank;
-
     return Slidable(
       endActionPane: ActionPane(motion: const ScrollMotion(),
         children: [

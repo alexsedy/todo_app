@@ -49,6 +49,7 @@ class _GroupNameWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _model = GroupFormWidgetModelProvider.read(context)?.model;
+
     return TextField(
       autofocus: true,
       textInputAction: TextInputAction.done,
