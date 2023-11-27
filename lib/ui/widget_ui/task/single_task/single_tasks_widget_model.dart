@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:todo_app/utilites/box_manager.dart';
 
-import '../../../../constants/constants.dart';
 import '../../../../domain/entity/single_task_entity.dart';
 import '../../../navigation/main_navigation.dart';
 
 class SingleTaskWidgetModel extends ChangeNotifier {
+  late final Future<Box<SingleTask>> _box;
+  ValueListenable<Object>? _listenableBox;
   var _singleTask = <SingleTask>[];
   var singleTaskText = "";
 
@@ -16,57 +19,45 @@ class SingleTaskWidgetModel extends ChangeNotifier {
 
   List<SingleTask> get singleTasks => _singleTask.toList();
 
-  void saveSingleTask(BuildContext context) async {
+  Future<void> saveSingleTask(BuildContext context) async {
     if (singleTaskText.isEmpty) return;
-    if (!Hive.isAdapterRegistered(3)) {
-      Hive.registerAdapter(SingleTaskAdapter());
-    }
-    final box = await Hive.openBox<SingleTask>(BoxConstants.SingleTaskBox);
     final singleTask = SingleTask(singleTask: singleTaskText, isDone: false);
+    final box = await BoxManager.instance.openSingleTaskBox();
     await box.add(singleTask);
+    await BoxManager.instance.closeBox(box);
     Navigator.of(context).pop();
   }
 
-  void addSingleTask(BuildContext context, int groupIndex) async {
-    if (!Hive.isAdapterRegistered(3)) {
-      Hive.registerAdapter(SingleTaskAdapter());
-    }
-    final box = await Hive.openBox<SingleTask>(BoxConstants.SingleTaskBox);
-    final groupKey = box.keyAt(groupIndex);
+  Future<void> addSingleTask(BuildContext context, int groupIndex) async {
+    final groupKey = (await _box).keyAt(groupIndex) as int;
 
     Navigator.of(context).pushNamed(MainNavigationRoutsName.task, arguments: groupKey);
   }
 
-  void doneToggle(int index) async {
-    final task = _singleTask[index];
-    final currentState = task.isDone ?? false;
-    task?.isDone = !currentState;
-    await task.save();
+  Future<void> doneToggle(int singleTaskIndex) async {
+    final box = await _box;
+    final task = box.getAt(singleTaskIndex);
+    task?.isDone = !task.isDone;
+    await task?.save();
+  }
+
+  Future<void> deleteSingleTask(int singleTaskIndex) async {
+    final box = await _box;
+    final groupKey = box.keyAt(singleTaskIndex) as int;
+    await Hive.deleteBoxFromDisk(BoxManager.instance.makeTaskBoxName(groupKey));
+    await box.delete(groupKey);
+  }
+
+  Future<void> _readSingleTaskFromHive() async {
+    _singleTask = (await _box).values.toList();
     notifyListeners();
   }
 
-  void deleteSingleTask(int singleTaskIndex) async {
-    if (!Hive.isAdapterRegistered(3)) {
-      Hive.registerAdapter(SingleTaskAdapter());
-    }
-
-    final box = await Hive.openBox<SingleTask>(BoxConstants.SingleTaskBox);
-    await box.deleteAt(singleTaskIndex);
-  }
-
-  void _readSingleTaskFromHive(Box<SingleTask> box) {
-    _singleTask = box.values.toList();
-    notifyListeners();
-  }
-
-  void _setup() async {
-    if (!Hive.isAdapterRegistered(3)) {
-      Hive.registerAdapter(SingleTaskAdapter());
-    }
-    final box = await Hive.openBox<SingleTask>(BoxConstants.SingleTaskBox);
-
-    _readSingleTaskFromHive(box);
-    box.listenable().addListener(() => _readSingleTaskFromHive(box));
+  Future<void> _setup() async {
+    _box = BoxManager.instance.openSingleTaskBox();
+    _readSingleTaskFromHive();
+    _listenableBox = (await _box).listenable();
+    _listenableBox?.addListener(_readSingleTaskFromHive);
   }
 }
 

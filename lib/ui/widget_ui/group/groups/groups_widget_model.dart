@@ -23,7 +23,7 @@ class GroupWidgetModel extends ChangeNotifier{
     Navigator.of(context).pushNamed(MainNavigationRoutsName.groupsForm);
   }
 
-  void addGroup(BuildContext context, int groupIndex) async {
+  Future<void> addGroup(BuildContext context, int groupIndex) async {
     final group = (await _box).getAt(groupIndex);
     if (group != null) {
       final configuration = TaskWidgetModelConfiguration(
@@ -33,19 +33,19 @@ class GroupWidgetModel extends ChangeNotifier{
     }
   }
 
-  void deleteGroup(int groupIndex) async {
+  Future<void> deleteGroup(int groupIndex) async {
     final box = await _box;
     final groupKey = box.keyAt(groupIndex) as int;
     await Hive.deleteBoxFromDisk(BoxManager.instance.makeTaskBoxName(groupKey));
     await box.delete(groupKey);
   }
 
-  void _readGroupsFromHive() async {
+  Future<void> _readGroupsFromHive() async {
     _group = (await _box).values.toList();
     notifyListeners();
   }
 
-  void _setup() async {
+  Future<void> _setup() async {
     _box = BoxManager.instance.openGroupBox();
     _readGroupsFromHive();
     _listenableBox = (await _box).listenable();
@@ -53,7 +53,7 @@ class GroupWidgetModel extends ChangeNotifier{
   }
 
   @override
-  void dispose() async {
+  Future<void> dispose() async {
     _listenableBox?.removeListener(_readGroupsFromHive);
     await BoxManager.instance.closeBox((await _box));
     super.dispose();
