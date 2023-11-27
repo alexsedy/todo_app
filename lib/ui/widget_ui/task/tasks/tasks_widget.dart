@@ -5,8 +5,8 @@ import 'package:todo_app/ui/widget_ui/task/tasks/tasks_widget_model.dart';
 import '../task_form/task_form_widget.dart';
 
 class TasksWidget extends StatefulWidget {
-  final int groupKey;
-  const TasksWidget({super.key, required this.groupKey});
+  final TaskWidgetModelConfiguration configuration;
+  const TasksWidget({super.key, required this.configuration});
 
   @override
   State<TasksWidget> createState() => _TasksWidgetState();
@@ -18,7 +18,7 @@ class _TasksWidgetState extends State<TasksWidget> {
   @override
   void initState() {
     super.initState();
-    _model = TasksWidgetModel(groupKey: widget.groupKey);
+    _model = TasksWidgetModel(configuration: widget.configuration);
   }
 
   @override
@@ -36,7 +36,7 @@ class TasksWidgetBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final groupModel = TasksWidgetModelProvider.watch(context)?.model;
-    final title = groupModel?.group?.name ?? "Tasks";
+    final title = groupModel?.configuration.title ?? "Tasks";
 
     return Scaffold(
       appBar: AppBar(title: Text(title)),
@@ -46,7 +46,7 @@ class TasksWidgetBody extends StatelessWidget {
           showModalBottomSheet<void>(
             context: context,
             builder: (BuildContext context) {
-              return TaskFormWidget(groupKey: groupModel?.groupKey ?? 0);
+              return TaskFormWidget(groupKey: groupModel?.configuration.groupKey ?? 0);
             },
           );
         },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/ui/widget_ui/task/tasks/tasks_widget_model.dart';
 
 import '../widget_ui/group/group_form/group_form_widget.dart';
 import '../widget_ui/group/groups/groups_widget.dart';
@@ -22,9 +23,9 @@ class MainNavigation{
   Route<Object> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case MainNavigationRoutsName.task:
-        final groupKey = settings.arguments as int;
+        final configuration = settings.arguments as TaskWidgetModelConfiguration;
         return MaterialPageRoute(
-          builder: (context) => TasksWidget(groupKey: groupKey),
+          builder: (context) => TasksWidget(configuration: configuration),
         );
       case MainNavigationRoutsName.taskForm:
         final groupKey = settings.arguments as int;

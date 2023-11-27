@@ -148,7 +148,7 @@ class CustomFloatingActionButton extends StatelessWidget {
           ),
         if (index == 0)
           FloatingActionButton(
-            onPressed: () => GroupsWidgetModelProvider.read(context)?.model.addGroupNote(context),
+            onPressed: () => GroupsWidgetModelProvider.read(context)?.model.addGroupForm(context),
             tooltip: 'Add list',
             child: Icon(Icons.folder),
           ),

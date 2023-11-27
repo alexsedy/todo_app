@@ -33,13 +33,13 @@ class _SingleTaskListWidgetState extends State<_SingleTaskListWidget> {
   Widget build(BuildContext context) {
     var itemCount = SingleTaskWidgetModelProvider.watch(context)?.model.singleTasks.length ?? 0;
 
-    return ListView.separated(
+    return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
           return _SingleTaskRowWidget(indexInList: index);
         },
-      separatorBuilder: (BuildContext context, int index) {
-          return const Divider(height: 4,);
-        },
+      // separatorBuilder: (BuildContext context, int index) {
+      //     return const Divider(height: 4,);
+      //   },
       itemCount: itemCount);
   }
 }
@@ -66,12 +66,23 @@ class _SingleTaskRowWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: ListTile(
-        title: Text(singleTask.singleTask,
-            style: TextStyle(decoration: singleTask.isDone ? TextDecoration.lineThrough : null)
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            border: Border.all(
+              color: singleTask.isDone ? Colors.grey : Colors.deepPurple.shade200,
+              width: 2)
+          ),
+          child: ListTile(
+            title: Text(singleTask.singleTask,
+                style: TextStyle(decoration: singleTask.isDone ? TextDecoration.lineThrough : null)
+            ),
+            trailing: Icon(singleTask.isDone ? Icons.check_box : Icons.check_box_outline_blank),
+            onTap: () => model.doneToggle(indexInList),
+          ),
         ),
-        trailing: Icon(singleTask.isDone ? Icons.check_box : Icons.check_box_outline_blank),
-        onTap: () => model.doneToggle(indexInList),
       ),
     );
   }

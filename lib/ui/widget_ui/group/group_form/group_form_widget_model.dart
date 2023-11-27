@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:todo_app/domain/entity/group_entity.dart';
+import 'package:todo_app/utilites/box_manager.dart';
 
 import '../../../../constants/constants.dart';
 
@@ -9,12 +10,10 @@ class GroupFormWidgetModel {
 
   void saveGroup(BuildContext context) async {
     if (groupName.isEmpty) return;
-    if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(GroupAdapter());
-    }
-    final box = await Hive.openBox<Group>(BoxConstants.GroupBox);
     final group = Group(name: groupName);
+    final box = await BoxManager.instance.openGroupBox();
     await box.add(group);
+    await BoxManager.instance.closeBox(box);
     Navigator.of(context).pop();
   }
 }
