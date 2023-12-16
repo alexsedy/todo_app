@@ -35,8 +35,8 @@ class TasksWidgetBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final groupModel = TasksWidgetModelProvider.watch(context)?.model;
-    final title = groupModel?.configuration.title ?? "Tasks";
+    final taskModel = TasksWidgetModelProvider.watch(context)?.model;
+    final title = taskModel?.configuration.title ?? "Tasks";
 
     return Scaffold(
       appBar: AppBar(title: Text(title)),
@@ -46,7 +46,7 @@ class TasksWidgetBody extends StatelessWidget {
           showModalBottomSheet<void>(
             context: context,
             builder: (BuildContext context) {
-              return TaskFormWidget(groupKey: groupModel?.configuration.groupKey ?? 0);
+              return TaskFormWidget(groupKey: taskModel?.configuration.groupKey ?? 0);
             },
           );
         },

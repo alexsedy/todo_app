@@ -51,5 +51,3 @@ class GroupFormWidgetModelProvider extends InheritedWidget {
     return false;
   }
 }
-
-

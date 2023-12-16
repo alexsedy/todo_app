@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:todo_app/ui/widget_ui/task/single_task_form/single_task_form_widget.dart';
+import 'package:todo_app/ui/widget_ui/task/tasks/tasks_widget_model.dart';
 
 import '../../task/single_task/single_task_widget.dart';
 import 'groups_widget_model.dart';
@@ -36,7 +37,7 @@ class _GroupsWidgetBodyState extends State<_GroupsWidgetBody> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    const _GroupListWidget(),
+    const _GroupGridWidget(),
     const SingleTaskWidget(),
   ];
 
@@ -73,6 +74,29 @@ class _GroupsWidgetBodyState extends State<_GroupsWidgetBody> {
   }
 }
 
+class _GroupGridWidget extends StatefulWidget {
+  const _GroupGridWidget({super.key});
+
+  @override
+  State<_GroupGridWidget> createState() => _GroupGridWidgetState();
+}
+
+class _GroupGridWidgetState extends State<_GroupGridWidget> {
+  @override
+  Widget build(BuildContext context) {
+    var groupsCount = GroupsWidgetModelProvider.watch(context)?.model.groups.length ?? 0;
+
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, ),
+      itemBuilder: (BuildContext context, int index) {
+        return _GroupRowWidget(indexInList: index);
+      },
+      itemCount: groupsCount,
+    );
+  }
+}
+
+
 class _GroupListWidget extends StatefulWidget {
   const _GroupListWidget({super.key});
 
@@ -96,6 +120,23 @@ class _GroupListWidgetState extends State<_GroupListWidget> {
   }
 }
 
+class _GroupCardWidget extends StatelessWidget {
+  final int indexInList;
+  const _GroupCardWidget({super.key, required this.indexInList});
+
+  @override
+  Widget build(BuildContext context) {
+    final model = GroupsWidgetModelProvider.read(context)!.model;
+    final group = model.groups[indexInList];
+
+    return GridTile(
+      header: Text(group.name),
+      child: Container(),
+    );
+  }
+}
+
+
 class _GroupRowWidget extends StatelessWidget {
   final int indexInList;
   const _GroupRowWidget({super.key, required this.indexInList});
@@ -104,6 +145,8 @@ class _GroupRowWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = GroupsWidgetModelProvider.read(context)!.model;
     final group = model.groups[indexInList];
+    final count = model.getTasksCountForGroup(indexInList);
+
     return Slidable(
       endActionPane: ActionPane(motion: const ScrollMotion(),
         children: [
@@ -116,10 +159,25 @@ class _GroupRowWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: ListTile(
-        title: Text(group.name),
-        trailing: Icon(Icons.arrow_drop_down),
-        onTap: () => model.addGroup(context, indexInList),
+      child: Card(
+        child: ListTile(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(height: 14),
+              Container(child: Icon(Icons.access_alarm, size: 40,)),
+              Container(height: 34),
+              Text(
+                group.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              Container(height: 6),
+              Text("$count Tasks", style: const TextStyle(fontWeight: FontWeight.w300),),
+            ],
+          ),
+          onTap: () => model.addGroup(context, indexInList),
+        ),
       ),
     );
   }

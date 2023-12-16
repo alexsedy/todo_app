@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -50,6 +52,12 @@ class GroupWidgetModel extends ChangeNotifier{
     _readGroupsFromHive();
     _listenableBox = (await _box).listenable();
     _listenableBox?.addListener(_readGroupsFromHive);
+  }
+
+  Future<int> getTasksCountForGroup(int groupIndex) async {
+    final groupKey = _group[groupIndex].key;
+    final box = await BoxManager.instance.openTaskBox(groupKey);
+    return box.values.length;
   }
 
   @override
