@@ -1,8 +1,7 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:todo_app/domain/entity/task_entity.dart';
 import 'package:todo_app/utilites/box_manager.dart';
+
 
 class TaskFormWidgetModel {
   int groupKey;
@@ -10,18 +9,16 @@ class TaskFormWidgetModel {
 
   TaskFormWidgetModel({required this.groupKey});
 
-  void saveTask(BuildContext context) async {
+  Future<void> saveTask(BuildContext context) async {
     if (taskText.isEmpty) return;
 
-    final task = Task(text: taskText, isDone: false);
-    final taskBox = await BoxManager.instance.openTaskBox(groupKey);
-    await taskBox.add(task);
-
     final groupBox = await BoxManager.instance.openGroupBox();
-    groupBox.get(groupKey)?.addTaskHive(taskBox, task);
+    final taskBox = await BoxManager.instance.openTaskBox();
 
-    await BoxManager.instance.closeBox(taskBox);
-    await BoxManager.instance.closeBox(groupBox);
+    final task = Task(text: taskText, isDone: false);
+    taskBox.add(task);
+    final group = groupBox.get(groupKey);
+    group?.addTaskHive(taskBox, task);
 
     Navigator.of(context).pop();
   }

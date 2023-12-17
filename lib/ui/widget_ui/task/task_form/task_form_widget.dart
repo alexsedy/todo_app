@@ -32,7 +32,7 @@ class _TextFormBodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _model = TaskFormWidgetModelProvider.read(context)?.model;
+    final _model = TaskFormWidgetModelProvider.watch(context)?.model;
 
     return SingleChildScrollView(
       child: Container(

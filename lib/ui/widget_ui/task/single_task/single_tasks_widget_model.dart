@@ -44,7 +44,6 @@ class SingleTaskWidgetModel extends ChangeNotifier {
   Future<void> deleteSingleTask(int singleTaskIndex) async {
     final box = await _box;
     final groupKey = box.keyAt(singleTaskIndex) as int;
-    await Hive.deleteBoxFromDisk(BoxManager.instance.makeTaskBoxName(groupKey));
     await box.delete(groupKey);
   }
 

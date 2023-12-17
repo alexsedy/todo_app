@@ -14,8 +14,8 @@ class BoxManager {
     return _openBox(BoxConstants.GroupBox, 1, GroupAdapter());
   }
 
-  Future<Box<Task>> openTaskBox(int groupKey) async {
-    return _openBox(makeTaskBoxName(groupKey), 2, TaskAdapter());
+  Future<Box<Task>> openTaskBox() async {
+    return _openBox(BoxConstants.TaskBox, 2, TaskAdapter());
   }
 
   Future<Box<SingleTask>> openSingleTaskBox() async {
@@ -36,7 +36,7 @@ class BoxManager {
     await box.close();
   }
 
-  String makeTaskBoxName(int groupKey) => 'tasks_box_$groupKey';
+  //String makeTaskBoxName(int groupKey) => 'tasks_box_$groupKey';
 
   Future<Box<T>> _openBox<T>(String name, int typeId, TypeAdapter<T> adapter) async {
     if (Hive.isBoxOpen(name)) {

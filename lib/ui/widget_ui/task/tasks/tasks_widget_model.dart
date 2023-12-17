@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:todo_app/domain/entity/group_entity.dart';
 import 'package:todo_app/domain/entity/task_entity.dart';
@@ -25,7 +24,7 @@ class TasksWidgetModel extends ChangeNotifier{
   }
 
   Future<void> _setup() async {
-    _taskBox = BoxManager.instance.openTaskBox(configuration.groupKey);
+    _taskBox = BoxManager.instance.openTaskBox();
     _groupBox = BoxManager.instance.openGroupBox();
     await _readTasksFromHive();
     _listenableBox = (await _taskBox).listenable();
