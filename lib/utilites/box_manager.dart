@@ -38,11 +38,7 @@ class BoxManager {
 
   String makeTaskBoxName(int groupKey) => 'tasks_box_$groupKey';
 
-  Future<Box<T>> _openBox<T>(
-      String name,
-      int typeId,
-      TypeAdapter<T> adapter,
-      ) async {
+  Future<Box<T>> _openBox<T>(String name, int typeId, TypeAdapter<T> adapter) async {
     if (Hive.isBoxOpen(name)) {
       final count = _boxCounter[name] ?? 1;
       _boxCounter[name] = count + 1;

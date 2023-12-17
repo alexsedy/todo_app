@@ -145,7 +145,9 @@ class _GroupRowWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = GroupsWidgetModelProvider.read(context)!.model;
     final group = model.groups[indexInList];
-    final count = model.getTasksCountForGroup(indexInList);
+    final tasks = model.groups[indexInList].tasks;
+    var completed = tasks?.toList().where((element) => element.isDone == false).length ?? 0;
+    var uncompleted = tasks?.toList().where((element) => element.isDone == true).length ?? 0;
 
     return Slidable(
       endActionPane: ActionPane(motion: const ScrollMotion(),
@@ -173,7 +175,8 @@ class _GroupRowWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               Container(height: 6),
-              Text("$count Tasks", style: const TextStyle(fontWeight: FontWeight.w300),),
+              Text("$completed completed", style: const TextStyle(fontWeight: FontWeight.w300),),
+              Text("$uncompleted uncompleted", style: const TextStyle(fontWeight: FontWeight.w300),),
             ],
           ),
           onTap: () => model.addGroup(context, indexInList),

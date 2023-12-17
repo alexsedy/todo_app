@@ -1,7 +1,6 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
-import 'package:hive/hive.dart';
-import 'package:todo_app/constants/constants.dart';
-import 'package:todo_app/domain/entity/group_entity.dart';
 import 'package:todo_app/domain/entity/task_entity.dart';
 import 'package:todo_app/utilites/box_manager.dart';
 
@@ -15,9 +14,15 @@ class TaskFormWidgetModel {
     if (taskText.isEmpty) return;
 
     final task = Task(text: taskText, isDone: false);
-    final box = await BoxManager.instance.openTaskBox(groupKey);
-    await box.add(task);
-    await BoxManager.instance.closeBox(box);
+    final taskBox = await BoxManager.instance.openTaskBox(groupKey);
+    await taskBox.add(task);
+
+    final groupBox = await BoxManager.instance.openGroupBox();
+    groupBox.get(groupKey)?.addTaskHive(taskBox, task);
+
+    await BoxManager.instance.closeBox(taskBox);
+    await BoxManager.instance.closeBox(groupBox);
+
     Navigator.of(context).pop();
   }
 }

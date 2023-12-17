@@ -37,9 +37,8 @@ class GroupWidgetModel extends ChangeNotifier{
 
   Future<void> deleteGroup(int groupIndex) async {
     final box = await _box;
-    final groupKey = box.keyAt(groupIndex) as int;
-    await Hive.deleteBoxFromDisk(BoxManager.instance.makeTaskBoxName(groupKey));
-    await box.delete(groupKey);
+    await box.getAt(groupIndex)?.tasks?.deleteAllFromHive();
+    await box.deleteAt(groupIndex);
   }
 
   Future<void> _readGroupsFromHive() async {
@@ -52,12 +51,6 @@ class GroupWidgetModel extends ChangeNotifier{
     _readGroupsFromHive();
     _listenableBox = (await _box).listenable();
     _listenableBox?.addListener(_readGroupsFromHive);
-  }
-
-  Future<int> getTasksCountForGroup(int groupIndex) async {
-    final groupKey = _group[groupIndex].key;
-    final box = await BoxManager.instance.openTaskBox(groupKey);
-    return box.values.length;
   }
 
   @override

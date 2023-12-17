@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:todo_app/domain/entity/group_entity.dart';
 import 'package:todo_app/domain/entity/task_entity.dart';
 import 'package:todo_app/utilites/box_manager.dart';
 
@@ -10,10 +11,14 @@ import '../../../navigation/main_navigation.dart';
 class TasksWidgetModel extends ChangeNotifier{
   final TaskWidgetModelConfiguration configuration;
   late final Future<Box<Task>> _taskBox;
+  late final Future<Box<Group>> _groupBox;
   ValueListenable<Object>? _listenableBox;
   var _tasks = <Task>[];
+  Group? _group;
 
   List<Task> get tasks => _tasks.toList();
+
+  Group? get group => _group;
 
   TasksWidgetModel({required this.configuration}) {
     _setup();
@@ -21,13 +26,18 @@ class TasksWidgetModel extends ChangeNotifier{
 
   Future<void> _setup() async {
     _taskBox = BoxManager.instance.openTaskBox(configuration.groupKey);
+    _groupBox = BoxManager.instance.openGroupBox();
     await _readTasksFromHive();
     _listenableBox = (await _taskBox).listenable();
     _listenableBox?.addListener(_readTasksFromHive);
   }
 
   Future<void> _readTasksFromHive() async {
-    _tasks = (await _taskBox).values.toList();
+    final box = await _groupBox;
+    _group = box.get(configuration.groupKey);
+
+    _tasks = _group?.tasks ?? <Task>[];
+
     notifyListeners();
   }
 
@@ -36,20 +46,23 @@ class TasksWidgetModel extends ChangeNotifier{
   }
 
   Future<void> deleteTask(int taskIndex) async {
-    return (await _taskBox).deleteAt(taskIndex);
+    await _group?.tasks?.deleteFromHive(taskIndex);
+    await _group?.save();
   }
 
   Future<void> doneToggle(int taskIndex) async {
-    final box = await _taskBox;
-    final task = box.getAt(taskIndex);
-    task?.isDone = !task.isDone;
+    final task = group?.tasks?[taskIndex];
+    final currentState = task?.isDone ?? false;
+    task?.isDone = !currentState;
     await task?.save();
+    notifyListeners();
   }
 
   @override
   void dispose() async {
     _listenableBox?.removeListener(_readTasksFromHive);
     await BoxManager.instance.closeBox((await _taskBox));
+    await BoxManager.instance.closeBox((await _groupBox));
     super.dispose();
   }
 }
