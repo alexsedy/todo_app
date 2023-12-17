@@ -27,7 +27,7 @@ class GroupWidgetModel extends ChangeNotifier{
     Navigator.of(context).pushNamed(MainNavigationRoutsName.groupsForm);
   }
 
-  Future<void> addGroup(BuildContext context, int groupIndex) async {
+  Future<void> openGroup(BuildContext context, int groupIndex) async {
     final group = (await _groupBox).getAt(groupIndex);
     if (group != null) {
       final configuration = TaskWidgetModelConfiguration(

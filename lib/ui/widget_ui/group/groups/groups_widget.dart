@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:todo_app/ui/widget_ui/task/single_task_form/single_task_form_widget.dart';
-import 'package:todo_app/ui/widget_ui/task/tasks/tasks_widget_model.dart';
+import 'package:todo_app/ui/widget_ui/group/notes/note/notes_widget.dart';
+import 'package:todo_app/ui/widget_ui/group/notes/note/notes_widget_model.dart';
 
-import '../../task/single_task/single_task_widget.dart';
 import 'groups_widget_model.dart';
 
 class GroupsWidget extends StatefulWidget {
@@ -14,13 +13,17 @@ class GroupsWidget extends StatefulWidget {
 }
 
 class _GroupsWidgetState extends State<GroupsWidget> {
-  final model = GroupWidgetModel();
+  final groupModel = GroupWidgetModel();
+  final noteModel = NotesWidgetModel();
 
   @override
   Widget build(BuildContext context) {
-    return GroupsWidgetModelProvider(
-      model: model,
-      child: const _GroupsWidgetBody(),
+    return NotesWidgetModelProvider(
+      model: noteModel,
+      child: GroupsWidgetModelProvider(
+        model: groupModel,
+        child: const _GroupsWidgetBody(),
+      ),
     );
   }
 }
@@ -38,7 +41,7 @@ class _GroupsWidgetBodyState extends State<_GroupsWidgetBody> {
 
   final List<Widget> _screens = [
     const _GroupGridWidget(),
-    const SingleTaskWidget(),
+    const NoteWidget(),
   ];
 
   @override
@@ -61,12 +64,12 @@ class _GroupsWidgetBodyState extends State<_GroupsWidgetBody> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.folder_copy_outlined),
-            label: 'Groups',
+            icon: Icon(Icons.check_box_rounded),
+            label: 'To Do',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.toc),
-            label: 'Tasks',
+            icon: Icon(Icons.notes),
+            label: 'Notes',
           ),
         ],
       ),
@@ -120,23 +123,6 @@ class _GroupListWidgetState extends State<_GroupListWidget> {
   }
 }
 
-class _GroupCardWidget extends StatelessWidget {
-  final int indexInList;
-  const _GroupCardWidget({super.key, required this.indexInList});
-
-  @override
-  Widget build(BuildContext context) {
-    final model = GroupsWidgetModelProvider.read(context)!.model;
-    final group = model.groups[indexInList];
-
-    return GridTile(
-      header: Text(group.name),
-      child: Container(),
-    );
-  }
-}
-
-
 class _GroupRowWidget extends StatelessWidget {
   final int indexInList;
   const _GroupRowWidget({super.key, required this.indexInList});
@@ -178,7 +164,7 @@ class _GroupRowWidget extends StatelessWidget {
               Text("$uncompleted uncompleted", style: const TextStyle(fontWeight: FontWeight.w300),),
             ],
           ),
-          onTap: () => model.addGroup(context, indexInList),
+          onTap: () => model.openGroup(context, indexInList),
         ),
       ),
     );
@@ -195,15 +181,8 @@ class CustomFloatingActionButton extends StatelessWidget {
       children: [
         if (index == 1)
           FloatingActionButton(
-            onPressed: () {
-              showModalBottomSheet<void>(
-                context: context,
-                builder: (BuildContext context) {
-                  return SingleTaskFormWidget();
-                },
-              );
-            },
-            tooltip: 'Add task',
+            onPressed: () => NotesWidgetModelProvider.read(context)?.model.addNote(context),
+            tooltip: 'Add note',
             child: Icon(Icons.notes),
           ),
         if (index == 0)

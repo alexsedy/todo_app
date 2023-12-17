@@ -1,35 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'single_task_entity.dart';
+part of 'note_entity.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class SingleTaskAdapter extends TypeAdapter<SingleTask> {
+class NoteAdapter extends TypeAdapter<Note> {
   @override
   final int typeId = 3;
 
   @override
-  SingleTask read(BinaryReader reader) {
+  Note read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SingleTask(
-      singleTask: fields[0] as String,
-      isDone: fields[1] as bool,
+    return Note(
+      header: fields[0] as String,
+      note: fields[1] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, SingleTask obj) {
+  void write(BinaryWriter writer, Note obj) {
     writer
       ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.singleTask)
+      ..write(obj.header)
       ..writeByte(1)
-      ..write(obj.isDone);
+      ..write(obj.note);
   }
 
   @override
@@ -38,7 +38,7 @@ class SingleTaskAdapter extends TypeAdapter<SingleTask> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SingleTaskAdapter &&
+      other is NoteAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

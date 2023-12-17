@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:todo_app/constants/constants.dart';
-import 'package:todo_app/domain/entity/single_task_entity.dart';
+import 'package:todo_app/domain/entity/note_entity.dart';
 
 import '../domain/entity/group_entity.dart';
 import '../domain/entity/task_entity.dart';
@@ -18,8 +18,8 @@ class BoxManager {
     return _openBox(BoxConstants.TaskBox, 2, TaskAdapter());
   }
 
-  Future<Box<SingleTask>> openSingleTaskBox() async {
-    return _openBox(BoxConstants.SingleTaskBox, 3, SingleTaskAdapter());
+  Future<Box<Note>> openNoteBox() async {
+    return _openBox(BoxConstants.NoteBox, 3, NoteAdapter());
   }
 
   Future<void> closeBox<T>(Box<T> box) async {
