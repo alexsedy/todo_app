@@ -33,7 +33,7 @@ class _GroupListWidgetState extends State<_NotesListWidget> {
     var groupsCount = NotesWidgetModelProvider.watch(context)?.model.getNote.length ?? 0;
 
     return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, ),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemBuilder: (BuildContext context, int index) {
         return _NotesRowWidget(indexInList: index);
       },
@@ -56,12 +56,18 @@ class _NotesRowWidget extends StatelessWidget {
     return Slidable(
       endActionPane: ActionPane(motion: const ScrollMotion(),
         children: [
-          SlidableAction(
-            onPressed: (context) => model.deleteNote(indexInList),
-            backgroundColor: Colors.redAccent,
-            foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: 'Delete',
+          Container(
+            height: 190,
+            width: 100,
+            child: SlidableAction(
+              autoClose: true,
+              borderRadius: BorderRadius.circular(12),
+              onPressed: (context) => model.deleteNote(indexInList),
+              backgroundColor: Colors.redAccent,
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              label: 'Delete',
+            ),
           ),
         ],
       ),
@@ -73,6 +79,8 @@ class _NotesRowWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if(!isEmptyHeader) Text(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   note.header,
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
@@ -80,11 +88,15 @@ class _NotesRowWidget extends StatelessWidget {
                   ),
                 ),
                 Container(height: 10),
-                Text(note.note),
+                Text(
+                  note.note,
+                  maxLines: 6,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ],
             ),
             trailing: null,
-            onTap: () => model.openNote(context, indexInList),
+            onTap: () => model.openNote(context, note),
           ),
         ),
       ),

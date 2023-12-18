@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/domain/entity/note_entity.dart';
 import 'package:todo_app/ui/widget_ui/group/notes/note/notes_widget_model.dart';
 
 class NoteFormWidget extends StatefulWidget {
@@ -15,7 +16,7 @@ class _NoteFormWidgetState extends State<NoteFormWidget> {
   Widget build(BuildContext context) {
     return NotesWidgetModelProvider(
       model: _model,
-      child: const _TextFormBodyWidget(),
+      child: _TextFormBodyWidget(),
     );
   }
 }
@@ -27,47 +28,67 @@ class _TextFormBodyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final _model = NotesWidgetModelProvider.read(context)?.model;
 
+    final Note? note = ModalRoute.of(context)?.settings.arguments as Note?;
+    final headerController = TextEditingController(text: note?.header);
+    final noteBodyController = TextEditingController(text: note?.note);
+
     return Scaffold(
-      appBar: AppBar(title: Text("Add note")),
+      appBar: AppBar(title: const Text("Add note")),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => NotesWidgetModelProvider.read(context)?.model.saveNote(context),
-        child: Icon(Icons.done),
+        onPressed: () => NotesWidgetModelProvider.read(context)?.model.saveNote(context, existingNote: note),
+        child: const Icon(Icons.done),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Center(
-              child: TextField(
-                maxLines: 1,
-                decoration: InputDecoration(
-                  hintStyle: TextStyle(
-                    fontSize: 20,
-                  ),
-                  hintText: "Name",
-                  border: InputBorder.none
-                ),
-                style: TextStyle(
-                ),
-                onChanged: (value) => _model?.header = value,
-              )
-            ),
-            Expanded(
-              child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Column(
+            children: [
+              Center(
                 child: TextField(
-                  minLines: 1,
-                  maxLines: 50,
-                  textInputAction: TextInputAction.newline,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Note",
+                  controller: headerController,
+                  maxLines: 1,
+                  decoration: const InputDecoration(
+                    hintStyle: TextStyle(
+                      fontSize: 22,
+                    ),
+                    hintText: "Name",
+                    border: InputBorder.none
                   ),
-                  onChanged: (value) => _model?.noteBody = value,
-                  onEditingComplete: () => _model?.saveNote(context),
+                  style: const TextStyle(
+                    fontSize: 22,
+                  ),
+                  onChanged: (value) => _model?.header = value,
+                )
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: TextField(
+                    controller: noteBodyController,
+                    minLines: 1,
+                    maxLines: 50,
+                    textInputAction: TextInputAction.newline,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Note",
+                    ),
+                    onChanged: (value) => _model?.noteBody = value,
+                    onEditingComplete: () => _model?.saveNote(context, existingNote: note),
+                  ),
                 ),
               ),
-            ),
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.format_list_numbered)),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.format_list_bulleted_rounded)),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.abc_outlined)),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz_outlined)),
+                  Container(width: 50,),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
