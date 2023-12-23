@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:todo_app/domain/entity/task_entity.dart';
 
@@ -12,7 +13,13 @@ class Group extends HiveObject {
   @HiveField(1)
   HiveList<Task>? tasks;
 
-  Group({required this.name});
+  @HiveField(2)
+  int iconValue;
+
+  @HiveField(3)
+  int colorValue;
+
+  Group({required this.name, required this.iconValue, required this.colorValue,});
 
   void addTaskHive(Box box, Task task) {
     tasks ??= HiveList(box);

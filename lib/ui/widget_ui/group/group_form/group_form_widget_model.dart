@@ -5,12 +5,32 @@ import 'package:todo_app/utilites/box_manager.dart';
 
 import '../../../../constants/constants.dart';
 
-class GroupFormWidgetModel {
-  var groupName = "";
+class GroupFormWidgetModel extends ChangeNotifier {
+  String groupName = "";
+  int selectedIcon = 0;
+  int selectedColor = 0;
+
+  // int get getSelectedIcon {
+  //   return selectedIcon;
+  // }
+  //
+  // set setSelectedIcon(int value) {
+  //   selectedIcon = value;
+  //   notifyListeners();
+  // }
+  //
+  // void setSelectedColor(int index) {
+  //   selectedColor = index;
+  //   notifyListeners();
+  // }
 
   void saveGroup(BuildContext context) async {
     if (groupName.isEmpty) return;
-    final group = Group(name: groupName);
+    final group = Group(
+      name: groupName,
+      iconValue: selectedIcon,
+      colorValue: selectedColor,
+    );
     final box = await BoxManager.instance.openGroupBox();
     await box.add(group);
     await BoxManager.instance.closeBox(box);
@@ -48,6 +68,71 @@ class GroupFormWidgetModelProvider extends InheritedWidget {
 
   @override
   bool updateShouldNotify(GroupFormWidgetModelProvider old) {
-    return false;
+    return old.model.selectedIcon != model.selectedIcon ||
+        old.model.selectedColor != model.selectedColor;
+  }
+}
+
+abstract class IconAndColorComponent {
+  static const icons = [
+    Icons.notes,
+    Icons.sunny_snowing,
+    Icons.account_balance,
+    Icons.access_alarm,
+    Icons.account_balance,
+    Icons.dashboard_customize_sharp,
+    Icons.access_alarm,
+    Icons.account_balance,
+    Icons.dashboard_customize_sharp,
+    Icons.access_alarm,
+    Icons.account_balance,
+    Icons.account_balance,
+    Icons.dashboard_customize_sharp,
+    Icons.access_alarm,
+    Icons.account_balance,
+    Icons.dashboard_customize_sharp,
+    Icons.access_alarm,
+    Icons.account_balance,
+    Icons.access_alarm,
+    Icons.account_balance,
+    Icons.account_balance,
+    Icons.dashboard_customize_sharp,
+    Icons.access_alarm,
+    Icons.account_balance,
+    Icons.dashboard_customize_sharp,
+    Icons.access_alarm,
+    Icons.account_balance,
+  ];
+
+  static const colors = [
+    Colors.blueAccent,
+    Colors.lightBlue,
+    Colors.lightBlueAccent,
+    Colors.deepPurple,
+    Colors.deepPurpleAccent,
+    Colors.purple,
+    Colors.red,
+    Colors.redAccent,
+    Colors.deepOrange,
+    Colors.amber,
+    Colors.amberAccent,
+    Colors.yellow,
+    Colors.green,
+    Colors.greenAccent,
+    Colors.lightGreen,
+    Colors.lightGreenAccent,
+    Colors.lime,
+    Colors.limeAccent,
+    Colors.blueGrey,
+    Colors.black12,
+    Colors.grey,
+  ];
+
+  static IconData getIconByIndex(int index) {
+    return icons[index];
+  }
+
+  static Color getColorByIndex(int index) {
+    return colors[index];
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:todo_app/ui/widget_ui/group/group_form/group_form_widget_model.dart';
 import 'package:todo_app/ui/widget_ui/group/notes/note/notes_widget.dart';
 import 'package:todo_app/ui/widget_ui/group/notes/note/notes_widget_model.dart';
 
@@ -131,6 +132,8 @@ class _GroupRowWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = GroupsWidgetModelProvider.read(context)!.model;
     final group = model.groups[indexInList];
+    final iconIndex = model.groups[indexInList].iconValue;
+    final colorIndex = model.groups[indexInList].colorValue;
     var completed = model.completedTasks(group);
     var uncompleted = model.uncompletedTasks(group);
 
@@ -147,12 +150,13 @@ class _GroupRowWidget extends StatelessWidget {
         ],
       ),
       child: Card(
+        color: IconAndColorComponent.getColorByIndex(colorIndex),
         child: ListTile(
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(height: 14),
-              Container(child: Icon(Icons.access_alarm, size: 40,)),
+              Container(child: Icon(IconAndColorComponent.getIconByIndex(iconIndex), size: 40,)),
               Container(height: 34),
               Text(
                 group.name,
