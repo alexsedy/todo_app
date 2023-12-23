@@ -7,29 +7,29 @@ import '../../../../constants/constants.dart';
 
 class GroupFormWidgetModel extends ChangeNotifier {
   String groupName = "";
-  int selectedIcon = 0;
-  int selectedColor = 0;
+  int _selectedIcon = 0;
+  int _selectedColor = 0;
 
-  // int get getSelectedIcon {
-  //   return selectedIcon;
-  // }
-  //
-  // set setSelectedIcon(int value) {
-  //   selectedIcon = value;
-  //   notifyListeners();
-  // }
-  //
-  // void setSelectedColor(int index) {
-  //   selectedColor = index;
-  //   notifyListeners();
-  // }
+  int get selectedIcon => _selectedIcon;
+
+  set selectedIcon(int value) {
+    _selectedIcon = value;
+    notifyListeners();
+  }
+
+  int get selectedColor => _selectedColor;
+
+  set selectedColor(int value) {
+    _selectedColor = value;
+    notifyListeners();
+  }
 
   void saveGroup(BuildContext context) async {
     if (groupName.isEmpty) return;
     final group = Group(
       name: groupName,
-      iconValue: selectedIcon,
-      colorValue: selectedColor,
+      iconValue: _selectedIcon,
+      colorValue: _selectedColor,
     );
     final box = await BoxManager.instance.openGroupBox();
     await box.add(group);
@@ -68,8 +68,9 @@ class GroupFormWidgetModelProvider extends InheritedWidget {
 
   @override
   bool updateShouldNotify(GroupFormWidgetModelProvider old) {
-    return old.model.selectedIcon != model.selectedIcon ||
-        old.model.selectedColor != model.selectedColor;
+    return old.model != model;
+      // old.model.selectedIcon != model.selectedIcon ||
+      //   old.model.selectedColor != model.selectedColor;
   }
 }
 

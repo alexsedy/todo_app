@@ -71,14 +71,8 @@ class _GroupNameWidget extends StatelessWidget {
   }
 }
 
-class _GroupIconWidget extends StatefulWidget {
+class _GroupIconWidget extends StatelessWidget {
   const _GroupIconWidget({super.key});
-
-  @override
-  State<_GroupIconWidget> createState() => _GroupIconWidgetState();
-}
-
-class _GroupIconWidgetState extends State<_GroupIconWidget> {
 
   @override
   Widget build(BuildContext context) {
