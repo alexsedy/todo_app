@@ -57,11 +57,11 @@ class GroupWidgetModel extends ChangeNotifier{
   }
 
   int completedTasks(Group group) {
-    return group.tasks?.where((task) => !task.isDone).length ?? 0;
+    return group.tasks?.where((task) => task.isDone).length ?? 0;
   }
 
   int uncompletedTasks(Group group) {
-    return group.tasks?.where((task) => task.isDone).length ?? 0;
+    return group.tasks?.where((task) => !task.isDone).length ?? 0;
   }
 
   @override

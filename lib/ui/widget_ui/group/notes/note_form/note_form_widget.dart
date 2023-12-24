@@ -47,6 +47,7 @@ class _TextFormBodyWidget extends StatelessWidget {
               Center(
                 child: TextField(
                   controller: headerController,
+                  textCapitalization: TextCapitalization.sentences,
                   maxLines: 1,
                   decoration: const InputDecoration(
                     hintStyle: TextStyle(
@@ -65,6 +66,7 @@ class _TextFormBodyWidget extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: TextField(
                     controller: noteBodyController,
+                    textCapitalization: TextCapitalization.sentences,
                     minLines: 1,
                     maxLines: 50,
                     textInputAction: TextInputAction.newline,

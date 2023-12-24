@@ -45,6 +45,7 @@ class _TextFormBodyWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(10),
               child: TextField(
+                textCapitalization: TextCapitalization.sentences,
                 autofocus: true,
                 textInputAction: TextInputAction.newline,
                 minLines: 1,

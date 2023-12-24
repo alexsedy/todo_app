@@ -140,23 +140,48 @@ class _GroupRowWidget extends StatelessWidget {
     return Slidable(
       endActionPane: ActionPane(motion: const ScrollMotion(),
         children: [
-          SlidableAction(
-            onPressed: (context) => model.deleteGroup(indexInList),
-            backgroundColor: Colors.redAccent,
-            foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: 'Delete',
+          SizedBox(
+            height: 195,
+            width: 50,
+            child: SlidableAction(
+              onPressed: (context) => model.deleteGroup(indexInList),
+              autoClose: true,
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              borderRadius: BorderRadius.circular(12),
+              backgroundColor: Colors.redAccent,
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              //label: 'Delete',
+            ),
+          ),
+          SizedBox(
+            height: 195,
+            width: 50,
+            child: SlidableAction(
+              onPressed: (context) {},
+              autoClose: true,
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              borderRadius: BorderRadius.circular(12),
+              backgroundColor: Colors.blueGrey,
+              foregroundColor: Colors.white,
+              icon: Icons.edit,
+              //label: 'Delete',
+            ),
           ),
         ],
       ),
       child: Card(
-        color: IconAndColorComponent.getColorByIndex(colorIndex),
+        //color: IconAndColorComponent.getColorByIndex(colorIndex),
         child: ListTile(
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(height: 14),
-              Container(child: Icon(IconAndColorComponent.getIconByIndex(iconIndex), size: 40,)),
+              Container(
+                child: Icon(
+                  IconAndColorComponent.getIconByIndex(iconIndex),
+                  size: 40,
+                  color: IconAndColorComponent.getColorByIndex(colorIndex),)),
               Container(height: 34),
               Text(
                 group.name,
