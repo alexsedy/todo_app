@@ -17,6 +17,13 @@ class TasksWidgetModel extends ChangeNotifier{
 
   List<Task> get tasks => _tasks.toList();
 
+  List<Task> get sortedTasks {
+    List<Task> undoneTasks = _tasks.where((task) => !task.isDone).toList();
+    List<Task> doneTasks = _tasks.where((task) => task.isDone).toList();
+
+    return [...undoneTasks, ...doneTasks];
+  }
+
   Group? get group => _group;
 
   TasksWidgetModel({required this.configuration}) {
@@ -44,16 +51,14 @@ class TasksWidgetModel extends ChangeNotifier{
     Navigator.of(context).pushNamed(MainNavigationRoutsName.taskForm, arguments: configuration.groupKey);
   }
 
-  Future<void> deleteTask(int taskIndex) async {
-    await _group?.tasks?.deleteFromHive(taskIndex);
-    await _group?.save();
+  Future<void> deleteTask(Task task) async {
+    await task.delete();
   }
 
-  Future<void> doneToggle(int taskIndex) async {
-    final task = group?.tasks?[taskIndex];
-    final currentState = task?.isDone ?? false;
-    task?.isDone = !currentState;
-    await task?.save();
+  Future<void> doneToggle(Task task) async {
+    final currentState = task.isDone;
+    task.isDone = !currentState;
+    await task.save();
     notifyListeners();
   }
 

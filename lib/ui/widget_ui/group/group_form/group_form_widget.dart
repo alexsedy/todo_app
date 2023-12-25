@@ -38,7 +38,7 @@ class _GroupFormBodyWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(height: 100,),
-            _GroupIconWidget(key: _GroupIconWidgetState.iconWidgetKey),
+            _GroupIconWidget(),
             _GroupNameWidget(),
             _GroupSelectIcon(),
             _GroupSelectColor(),
@@ -72,25 +72,11 @@ class _GroupNameWidget extends StatelessWidget {
   }
 }
 
-class _GroupIconWidget extends StatefulWidget {
+class _GroupIconWidget extends StatelessWidget {
   const _GroupIconWidget({super.key});
-
-  @override
-  State<_GroupIconWidget> createState() => _GroupIconWidgetState();
-}
-
-class _GroupIconWidgetState extends State<_GroupIconWidget> {
-  static final GlobalKey<_GroupIconWidgetState> iconWidgetKey = GlobalKey<_GroupIconWidgetState>();
-
-  void updateWidget() {
-    setState(() {
-
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    var model = GroupFormWidgetModelProvider.read(context)?.model;
+    var model = GroupFormWidgetModelProvider.watch(context)?.model;
 
     return Stack(
       alignment: AlignmentDirectional.center,
@@ -99,9 +85,7 @@ class _GroupIconWidgetState extends State<_GroupIconWidget> {
             width: 120,
             height: 120,
             child: Card(color: IconAndColorComponent.getColorByIndex(model?.selectedColor ?? 0))),
-            //child: Card(color: model?.getColorByIndex())),
         Icon(IconAndColorComponent.getIconByIndex(model?.selectedIcon ?? 0), size: 90),
-        //Icon(model?.getIconByIndex(), size: 90),
       ],
     );
   }
@@ -140,7 +124,6 @@ class _GroupSelectIconState extends State<_GroupSelectIcon> {
               splashColor: Colors.transparent,
               onTap: () {
                 GroupFormWidgetModelProvider.read(context)?.model.selectedIcon = index;
-                _GroupIconWidgetState.iconWidgetKey.currentState?.updateWidget();
                 setState(() {
                   selectedIndex = index;
                 });
@@ -207,7 +190,6 @@ class _GroupSelectColorState extends State<_GroupSelectColor> {
               splashColor: Colors.transparent,
               onTap: () {
                 GroupFormWidgetModelProvider.read(context)?.model.selectedColor = index;
-                _GroupIconWidgetState.iconWidgetKey.currentState?.updateWidget();
                 setState(() {
                   selectedIndex = index;
                 });

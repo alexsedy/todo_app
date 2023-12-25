@@ -38,14 +38,14 @@ class GroupFormWidgetModel extends ChangeNotifier {
   }
 }
 
-class GroupFormWidgetModelProvider extends InheritedWidget {
+class GroupFormWidgetModelProvider extends InheritedNotifier {
   final GroupFormWidgetModel model;
 
   const GroupFormWidgetModelProvider({
     super.key,
     required this.model,
     required Widget child,
-  }) : super(child: child);
+  }) : super(child: child, notifier: model);
 
   static GroupFormWidgetModelProvider? watch(BuildContext context) {
     return context
@@ -68,9 +68,8 @@ class GroupFormWidgetModelProvider extends InheritedWidget {
 
   @override
   bool updateShouldNotify(GroupFormWidgetModelProvider old) {
-    return old.model != model;
-      // old.model.selectedIcon != model.selectedIcon ||
-      //   old.model.selectedColor != model.selectedColor;
+    return old.model.selectedIcon != model.selectedIcon ||
+        old.model.selectedColor != model.selectedColor;
   }
 }
 

@@ -21,26 +21,40 @@ class GroupWidgetModel extends ChangeNotifier{
     _setup();
   }
 
-  List<Group> get groups => _group.toList();
+  List<Group> get correctGroups => _group.reversed.toList();
+
+  List<Group> get groups => _group.reversed.toList();
 
   void addGroupForm(BuildContext context) {
     Navigator.of(context).pushNamed(MainNavigationRoutsName.groupsForm);
   }
 
-  Future<void> openGroup(BuildContext context, int groupIndex) async {
-    final group = (await _groupBox).getAt(groupIndex);
-    if (group != null) {
-      final configuration = TaskWidgetModelConfiguration(
-          groupKey: group.key, title: group.name);
+  // Future<void> openGroup(BuildContext context, int groupIndex) async {
+  //   final group = (await _groupBox).getAt(groupIndex);
+  //   if (group != null) {
+  //     final configuration = TaskWidgetModelConfiguration(
+  //         groupKey: group.key, title: group.name);
+  //
+  //     Navigator.of(context).pushNamed(MainNavigationRoutsName.task, arguments: configuration);
+  //   }
+  // }
 
-      Navigator.of(context).pushNamed(MainNavigationRoutsName.task, arguments: configuration);
-    }
+  Future<void> openGroup(BuildContext context, Group group) async {
+    final configuration = TaskWidgetModelConfiguration(
+        groupKey: group.key, title: group.name);
+
+    Navigator.of(context).pushNamed(MainNavigationRoutsName.task, arguments: configuration);
   }
 
-  Future<void> deleteGroup(int groupIndex) async {
-    final box = await _groupBox;
-    await box.getAt(groupIndex)?.tasks?.deleteAllFromHive();
-    await box.deleteAt(groupIndex);
+  // Future<void> deleteGroup(int groupIndex) async {
+  //   final box = await _groupBox;
+  //   await box.getAt(groupIndex)?.tasks?.deleteAllFromHive();
+  //   await box.deleteAt(groupIndex);
+  // }
+
+  Future<void> deleteGroup(Group group) async {
+    await group.tasks?.deleteAllFromHive();
+    await group.delete();
   }
 
   Future<void> _readGroupsFromHive() async {
@@ -57,10 +71,12 @@ class GroupWidgetModel extends ChangeNotifier{
   }
 
   int completedTasks(Group group) {
+    notifyListeners();
     return group.tasks?.where((task) => task.isDone).length ?? 0;
   }
 
   int uncompletedTasks(Group group) {
+    notifyListeners();
     return group.tasks?.where((task) => !task.isDone).length ?? 0;
   }
 

@@ -91,7 +91,7 @@ class _GroupGridWidgetState extends State<_GroupGridWidget> {
     var groupsCount = GroupsWidgetModelProvider.watch(context)?.model.groups.length ?? 0;
 
     return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, ),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, ),
       itemBuilder: (BuildContext context, int index) {
         return _GroupRowWidget(indexInList: index);
       },
@@ -144,9 +144,9 @@ class _GroupRowWidget extends StatelessWidget {
             height: 195,
             width: 50,
             child: SlidableAction(
-              onPressed: (context) => model.deleteGroup(indexInList),
+              onPressed: (context) => model.deleteGroup(group),
               autoClose: true,
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               borderRadius: BorderRadius.circular(12),
               backgroundColor: Colors.redAccent,
               foregroundColor: Colors.white,
@@ -160,7 +160,7 @@ class _GroupRowWidget extends StatelessWidget {
             child: SlidableAction(
               onPressed: (context) {},
               autoClose: true,
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               borderRadius: BorderRadius.circular(12),
               backgroundColor: Colors.blueGrey,
               foregroundColor: Colors.white,
@@ -193,7 +193,7 @@ class _GroupRowWidget extends StatelessWidget {
               Text("$uncompleted uncompleted", style: const TextStyle(fontWeight: FontWeight.w300),),
             ],
           ),
-          onTap: () => model.openGroup(context, indexInList),
+          onTap: () => model.openGroup(context, group),
         ),
       ),
     );
@@ -201,27 +201,26 @@ class _GroupRowWidget extends StatelessWidget {
 }
 
 class CustomFloatingActionButton extends StatelessWidget {
-  int index;
-  CustomFloatingActionButton({required this.index, super.key});
+  final int index;
+  CustomFloatingActionButton({required this.index, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        if (index == 1)
-          FloatingActionButton(
-            onPressed: () => NotesWidgetModelProvider.read(context)?.model.addNote(context),
-            tooltip: 'Add note',
-            child: Icon(Icons.notes),
-          ),
-        if (index == 0)
-          FloatingActionButton(
-            onPressed: () => GroupsWidgetModelProvider.read(context)?.model.addGroupForm(context),
-            tooltip: 'Add list',
-            child: Icon(Icons.folder),
-          ),
-      ],
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: index == 1
+          ? FloatingActionButton(
+        key: ValueKey<int>(index),
+        onPressed: () => NotesWidgetModelProvider.read(context)?.model.addNote(context),
+        tooltip: 'Add note',
+        child: Icon(Icons.notes),
+      )
+          : FloatingActionButton(
+        key: ValueKey<int>(index),
+        onPressed: () => GroupsWidgetModelProvider.read(context)?.model.addGroupForm(context),
+        tooltip: 'Add list',
+        child: Icon(Icons.folder),
+      ),
     );
   }
 }
-
