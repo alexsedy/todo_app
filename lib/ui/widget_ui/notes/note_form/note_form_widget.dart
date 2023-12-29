@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/domain/entity/note_entity.dart';
-import 'package:todo_app/ui/widget_ui/group/notes/note/notes_widget_model.dart';
+import 'package:todo_app/ui/widget_ui/notes/note/notes_widget_model.dart';
 
 class NoteFormWidget extends StatefulWidget {
   const NoteFormWidget({super.key});

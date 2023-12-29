@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:todo_app/ui/widget_ui/group/group_form/group_form_widget_model.dart';
-import 'package:todo_app/ui/widget_ui/group/notes/note/notes_widget.dart';
-import 'package:todo_app/ui/widget_ui/group/notes/note/notes_widget_model.dart';
+import 'package:todo_app/ui/widget_ui/notes/note/notes_widget.dart';
+import 'package:todo_app/ui/widget_ui/notes/note/notes_widget_model.dart';
 
 import 'groups_widget_model.dart';
 
