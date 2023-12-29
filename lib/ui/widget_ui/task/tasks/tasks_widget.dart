@@ -70,7 +70,6 @@ class _HeaderList extends StatelessWidget {
   Widget build(BuildContext context) {
     var tasks = model?.group?.tasks?.length ?? 0;
 
-
     return SliverAppBar(
       shape: const ContinuousRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -148,6 +147,18 @@ class _TaskListRowWidget extends StatelessWidget {
     final model = TasksWidgetModelProvider.read(context)!.model;
     final task = model.sortedTasks[indexInList];
 
+    final doneDecor = BoxDecoration(
+      border: Border.all(width: 2, color: IconAndColorComponent.getColorByIndex(model.group?.colorValue ?? 0)),
+      borderRadius: BorderRadius.circular(12),
+    );
+
+    final unDoneDecor = BoxDecoration(
+      color: Colors.grey.shade300,
+      border: Border.all(width: 2, color: Colors.grey),
+      borderRadius: BorderRadius.circular(12),
+    );
+
+
     return Slidable(
       endActionPane: ActionPane(
         motion: const ScrollMotion(),
@@ -168,13 +179,82 @@ class _TaskListRowWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: ListTile(
-        title: Text(task.text,
-          style: TextStyle(decoration: task.isDone ? TextDecoration.lineThrough : null)
+      child: Padding(
+        //padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        padding: EdgeInsets.only(top: 20, left: 10, right: 10),
+        child: Container(
+          decoration: task.isDone ? unDoneDecor : doneDecor,
+          child: Row(
+            children: [
+              InkWell(
+                borderRadius: BorderRadius.circular(12),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(task.isDone ? Icons.check_box : Icons.check_box_outline_blank,
+                    color: IconAndColorComponent.getColorByIndex(model.group?.colorValue ?? 0),
+                    size: 35,
+                  ),
+                ),
+                onTap: () => model.doneToggle(task),
+              ),
+              //SizedBox(width: 16),
+              InkWell(
+                borderRadius: BorderRadius.circular(12),
+                child: SizedBox(
+                  width: 336,
+                  child: Text(
+                    task.text,
+                    style: TextStyle(
+                      decoration: task.isDone ? TextDecoration.lineThrough : null,
+                      fontSize: 22
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  showModalBottomSheet<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return TaskFormWidget(
+                        groupKey: model.configuration.groupKey,
+                        task: task,
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
         ),
-        trailing: Icon(task.isDone ? Icons.check_box : Icons.check_box_outline_blank),
-        onTap: () => model.doneToggle(task),
       ),
     );
+
+    // return Slidable(
+    //   endActionPane: ActionPane(
+    //     motion: const ScrollMotion(),
+    //     children: [
+    //       SlidableAction(
+    //         onPressed: (context) => (){},
+    //         backgroundColor: Colors.blueGrey,
+    //         foregroundColor: Colors.white,
+    //         icon: Icons.more_vert,
+    //         label: 'More',
+    //       ),
+    //       SlidableAction(
+    //         onPressed: (context) => model.deleteTask(task),
+    //         backgroundColor: Colors.redAccent,
+    //         foregroundColor: Colors.white,
+    //         icon: Icons.delete,
+    //         label: 'Delete',
+    //       ),
+    //     ],
+    //   ),
+    //   child: ListTile(
+    //     title: Text(task.text,
+    //       style: TextStyle(decoration: task.isDone ? TextDecoration.lineThrough : null)
+    //     ),
+    //     trailing: Icon(task.isDone ? Icons.check_box : Icons.check_box_outline_blank),
+    //     onTap: () => model.doneToggle(task),
+    //   ),
+    // );
   }
 }

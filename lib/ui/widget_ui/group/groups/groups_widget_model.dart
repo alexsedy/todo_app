@@ -6,7 +6,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:todo_app/domain/entity/task_entity.dart';
 import 'package:todo_app/ui/widget_ui/task/tasks/tasks_widget_model.dart';
-import 'package:todo_app/utilites/box_manager.dart';
+import 'package:todo_app/utilities/box_manager.dart';
 
 import '../../../../domain/entity/group_entity.dart';
 import '../../../navigation/main_navigation.dart';

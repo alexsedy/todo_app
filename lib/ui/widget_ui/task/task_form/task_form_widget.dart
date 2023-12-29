@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/domain/entity/task_entity.dart';
 import 'package:todo_app/ui/widget_ui/task/task_form/task_form_widget_model.dart';
 
 class TaskFormWidget extends StatefulWidget {
   final int groupKey;
-  const TaskFormWidget({super.key, required this.groupKey});
+  final Task? task;
+  const TaskFormWidget({super.key, required this.groupKey, this.task});
 
   @override
   State<TaskFormWidget> createState() => _TaskFormWidgetState();
@@ -23,16 +25,21 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
   Widget build(BuildContext context) {
     return TaskFormWidgetModelProvider(
       model: _model,
-      child: const _TextFormBodyWidget(),);
+      child: _TextFormBodyWidget(task: widget.task),);
   }
 }
 
 class _TextFormBodyWidget extends StatelessWidget {
-  const _TextFormBodyWidget({super.key});
+  final Task? task;
+  const _TextFormBodyWidget({super.key, this.task});
 
   @override
   Widget build(BuildContext context) {
     final _model = TaskFormWidgetModelProvider.watch(context)?.model;
+    final controller = TextEditingController(text: task?.text);
+
+    controller.selection = TextSelection.fromPosition(
+        TextPosition(offset: controller.text.length));
 
     return SingleChildScrollView(
       child: Container(
@@ -45,7 +52,7 @@ class _TextFormBodyWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(10),
               child: TextField(
-                textCapitalization: TextCapitalization.sentences,
+                controller: controller,
                 autofocus: true,
                 textInputAction: TextInputAction.newline,
                 minLines: 1,
@@ -54,7 +61,7 @@ class _TextFormBodyWidget extends StatelessWidget {
                   hintText: "Task",
                 ),
                 onChanged: (value) => _model?.taskText = value,
-                onEditingComplete: () => _model?.saveTask(context),
+                onEditingComplete: () => _model?.saveTask(context, task),
               ),
             ),
             Padding(
@@ -66,7 +73,7 @@ class _TextFormBodyWidget extends StatelessWidget {
                       onPressed: () => Navigator.pop(context),
                       icon: Icon(Icons.cancel_outlined)),
                   IconButton(
-                      onPressed: () => TaskFormWidgetModelProvider.read(context)?.model.saveTask(context),
+                      onPressed: () => TaskFormWidgetModelProvider.read(context)?.model.saveTask(context, task),
                       icon: Icon(Icons.done)),
                 ],
               ),
@@ -77,6 +84,3 @@ class _TextFormBodyWidget extends StatelessWidget {
     );
   }
 }
-
-
-

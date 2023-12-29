@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/domain/entity/task_entity.dart';
-import 'package:todo_app/utilites/box_manager.dart';
+import 'package:todo_app/utilities/box_manager.dart';
 
 
 class TaskFormWidgetModel {
@@ -9,19 +9,37 @@ class TaskFormWidgetModel {
 
   TaskFormWidgetModel({required this.groupKey});
 
-  Future<void> saveTask(BuildContext context) async {
+  Future<void> saveTask(BuildContext context, Task? existingTask) async {
     if (taskText.isEmpty) return;
 
     final groupBox = await BoxManager.instance.openGroupBox();
     final taskBox = await BoxManager.instance.openTaskBox();
-
-    final task = Task(text: taskText, isDone: false);
-    taskBox.add(task);
-    final group = groupBox.get(groupKey);
-    group?.addTaskHive(taskBox, task);
+    if (existingTask != null) {
+      existingTask.text = taskText;
+      taskBox.put(existingTask.key, existingTask);
+    } else {
+      final task = Task(text: taskText, isDone: false);
+      taskBox.add(task);
+      final group = groupBox.get(groupKey);
+      group?.addTaskHive(taskBox, task);
+    }
 
     Navigator.of(context).pop();
   }
+
+  // Future<void> saveTask(BuildContext context) async {
+  //   if (taskText.isEmpty) return;
+  //
+  //   final groupBox = await BoxManager.instance.openGroupBox();
+  //   final taskBox = await BoxManager.instance.openTaskBox();
+  //
+  //   final task = Task(text: taskText, isDone: false);
+  //   taskBox.add(task);
+  //   final group = groupBox.get(groupKey);
+  //   group?.addTaskHive(taskBox, task);
+  //
+  //   Navigator.of(context).pop();
+  // }
 }
 
 class TaskFormWidgetModelProvider extends InheritedWidget {

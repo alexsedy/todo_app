@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:todo_app/domain/entity/note_entity.dart';
 import 'package:todo_app/ui/navigation/main_navigation.dart';
-import 'package:todo_app/utilites/box_manager.dart';
+import 'package:todo_app/utilities/box_manager.dart';
 
 
 class NotesWidgetModel extends ChangeNotifier {

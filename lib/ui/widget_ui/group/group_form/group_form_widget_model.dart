@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:todo_app/domain/entity/group_entity.dart';
-import 'package:todo_app/utilites/box_manager.dart';
+import 'package:todo_app/utilities/box_manager.dart';
 
 import '../../../../constants/constants.dart';
 
