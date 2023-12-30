@@ -31,7 +31,6 @@ class NotesWidgetModel extends ChangeNotifier {
 
   Future<void> saveNote(BuildContext context, {Note? existingNote}) async {
     if (header.isEmpty && noteBody.isEmpty) {
-      // Both header and noteBody are empty, do nothing
       return;
     }
 
@@ -50,21 +49,31 @@ class NotesWidgetModel extends ChangeNotifier {
         await box.put(existingNote.key, existingNote);
       }
     } else {
-      // Case 1: Save new Note only with noteBody
-      if (header.isEmpty) {
-        // Check if noteBody is not empty before creating a new Note
-        if (noteBody.isNotEmpty) {
-          final note = Note(header: "", note: noteBody);
-          await box.add(note);
-        }
+      if(header.isEmpty) {
+        final note = Note(header: "", note: noteBody);
+        await box.add(note);
+      } else if (noteBody.isEmpty) {
+        final note = Note(header: header, note: "");
+        await box.add(note);
       } else {
-        // Case 2: Save new Note with header and noteBody
-        // Check if header and noteBody are not empty before creating a new Note
-        if (header.isNotEmpty && noteBody.isNotEmpty) {
-          final note = Note(header: header, note: noteBody);
-          await box.add(note);
-        }
+        final note = Note(header: header, note: noteBody);
+        await box.add(note);
       }
+      // // Case 1: Save new Note only with noteBody
+      // if (header.isEmpty) {
+      //   // Check if noteBody is not empty before creating a new Note
+      //   if (noteBody.isNotEmpty) {
+      //     final note = Note(header: "", note: noteBody);
+      //     await box.add(note);
+      //   }
+      // } else {
+      //   // Case 2: Save new Note with header and noteBody
+      //   // Check if header and noteBody are not empty before creating a new Note
+      //   if (header.isNotEmpty && noteBody.isNotEmpty) {
+      //     final note = Note(header: header, note: noteBody);
+      //     await box.add(note);
+      //   }
+      // }
     }
 
     // Case 5: Edit existing Note header and noteBody
