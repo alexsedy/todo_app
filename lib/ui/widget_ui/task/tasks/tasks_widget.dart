@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:todo_app/ui/widget_ui/group/group_form/group_form_widget_model.dart';
+import 'package:todo_app/ui/widget_ui/group/groups/groups_widget_model.dart';
 import 'package:todo_app/ui/widget_ui/task/tasks/tasks_widget_model.dart';
 
 import '../task_form/task_form_widget.dart';

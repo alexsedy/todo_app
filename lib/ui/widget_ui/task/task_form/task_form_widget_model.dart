@@ -3,14 +3,20 @@ import 'package:todo_app/domain/entity/task_entity.dart';
 import 'package:todo_app/utilities/box_manager.dart';
 
 
-class TaskFormWidgetModel {
+class TaskFormWidgetModel extends ChangeNotifier {
   int groupKey;
   var taskText = "";
+  String? errorText;
 
   TaskFormWidgetModel({required this.groupKey});
 
   Future<void> saveTask(BuildContext context, Task? existingTask) async {
-    if (taskText.isEmpty) return;
+    if (taskText.isEmpty) {
+      errorText = "Please enter a task";
+      notifyListeners();
+
+      return;
+    }
 
     final groupBox = await BoxManager.instance.openGroupBox();
     final taskBox = await BoxManager.instance.openTaskBox();
@@ -42,13 +48,13 @@ class TaskFormWidgetModel {
   // }
 }
 
-class TaskFormWidgetModelProvider extends InheritedWidget {
+class TaskFormWidgetModelProvider extends InheritedNotifier {
   final TaskFormWidgetModel model;
   const TaskFormWidgetModelProvider({
     super.key,
     required this.model,
     required Widget child,
-  }) : super(child: child);
+  }) : super(child: child, notifier: model);
 
   static TaskFormWidgetModelProvider? watch(BuildContext context) {
     return context

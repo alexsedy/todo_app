@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:todo_app/ui/widget_ui/group/group_form/group_form_widget_model.dart';
 import 'package:todo_app/ui/widget_ui/notes/note/notes_widget.dart';
 import 'package:todo_app/ui/widget_ui/notes/note/notes_widget_model.dart';
 
@@ -138,35 +137,43 @@ class _GroupRowWidget extends StatelessWidget {
     var uncompleted = model.uncompletedTasks(group);
 
     return Slidable(
-      endActionPane: ActionPane(motion: const ScrollMotion(),
+      closeOnScroll: true,
+      endActionPane: ActionPane(
+        extentRatio: 0.3,
+        motion: const ScrollMotion(),
         children: [
-          SizedBox(
-            height: 195,
-            width: 50,
-            child: SlidableAction(
-              onPressed: (context) => model.deleteGroup(group),
-              autoClose: true,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              borderRadius: BorderRadius.circular(12),
-              backgroundColor: Colors.redAccent,
-              foregroundColor: Colors.white,
-              icon: Icons.delete,
-              //label: 'Delete',
-            ),
-          ),
-          SizedBox(
-            height: 195,
-            width: 50,
-            child: SlidableAction(
-              onPressed: (context) => model.editGroup(group, context),
-              autoClose: true,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              borderRadius: BorderRadius.circular(12),
-              backgroundColor: Colors.blueGrey,
-              foregroundColor: Colors.white,
-              icon: Icons.edit,
-              //label: 'Delete',
-            ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(
+                height: 95,
+                width: 50,
+                child: SlidableAction(
+                  onPressed: (context) => model.deleteGroup(group),
+                  autoClose: true,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  borderRadius: BorderRadius.circular(12),
+                  backgroundColor: Colors.redAccent,
+                  foregroundColor: Colors.white,
+                  icon: Icons.delete,
+                  //label: 'Delete',
+                ),
+              ),
+              SizedBox(
+                height: 95,
+                width: 50,
+                child: SlidableAction(
+                  onPressed: (context) => model.editGroup(group, context),
+                  autoClose: true,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  borderRadius: BorderRadius.circular(12),
+                  backgroundColor: Colors.blueGrey,
+                  foregroundColor: Colors.white,
+                  icon: Icons.edit,
+                  //label: 'Delete',
+                ),
+              ),
+            ],
           ),
         ],
       ),

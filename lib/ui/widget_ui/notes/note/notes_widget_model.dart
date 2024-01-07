@@ -18,16 +18,7 @@ class NotesWidgetModel extends ChangeNotifier {
     _setup();
   }
 
-  List<Note> get getNote => _note.toList();
-
-  // Future<void> saveNote(BuildContext context) async {
-  //   if (noteBody.isEmpty) return;
-  //   final note = Note(header: header, note: noteBody);
-  //   final box = await BoxManager.instance.openNoteBox();
-  //   await box.add(note);
-  //   await BoxManager.instance.closeBox(box);
-  //   Navigator.of(context).pop();
-  // }
+  List<Note> get getNote => _note.reversed.toList();
 
   Future<void> saveNote(BuildContext context, {Note? existingNote}) async {
     if (header.isEmpty && noteBody.isEmpty) {
@@ -59,21 +50,6 @@ class NotesWidgetModel extends ChangeNotifier {
         final note = Note(header: header, note: noteBody);
         await box.add(note);
       }
-      // // Case 1: Save new Note only with noteBody
-      // if (header.isEmpty) {
-      //   // Check if noteBody is not empty before creating a new Note
-      //   if (noteBody.isNotEmpty) {
-      //     final note = Note(header: "", note: noteBody);
-      //     await box.add(note);
-      //   }
-      // } else {
-      //   // Case 2: Save new Note with header and noteBody
-      //   // Check if header and noteBody are not empty before creating a new Note
-      //   if (header.isNotEmpty && noteBody.isNotEmpty) {
-      //     final note = Note(header: header, note: noteBody);
-      //     await box.add(note);
-      //   }
-      // }
     }
 
     // Case 5: Edit existing Note header and noteBody
@@ -86,53 +62,6 @@ class NotesWidgetModel extends ChangeNotifier {
     await BoxManager.instance.closeBox(box);
     Navigator.of(context).pop();
   }
-
-  // Work method, but need impl don't save empty note
-  // Future<void> saveNote(BuildContext context, {Note? existingNote}) async {
-  //   //if (noteBody.isEmpty) return;
-  //
-  //   final box = await BoxManager.instance.openNoteBox();
-  //
-  //   if (existingNote != null) {
-  //     // Case 3: Edit existing Note header
-  //     if (header.isNotEmpty) {
-  //       existingNote.header = header;
-  //       await box.put(existingNote.key, existingNote);
-  //     }
-  //
-  //     // Case 4: Edit existing Note noteBody
-  //     if (noteBody.isNotEmpty) {
-  //       existingNote.note = noteBody;
-  //       await box.put(existingNote.key, existingNote);
-  //     }
-  //   } else {
-  //     // Case 1: Save new Note only with noteBody
-  //     if (header.isEmpty) {
-  //       final note = Note(header: "", note: noteBody);
-  //       await box.add(note);
-  //     } else {
-  //       // Case 2: Save new Note with header and noteBody
-  //       final note = Note(header: header, note: noteBody);
-  //       await box.add(note);
-  //     }
-  //
-  //     if (header.isEmpty && noteBody.isEmpty) {
-  //       this.deleteNote();
-  //     }
-  //
-  //     await BoxManager.instance.closeBox(box);
-  //   }
-  //
-  //   // Case 5: Edit existing Note header and noteBody
-  //   if (existingNote != null && header.isNotEmpty && noteBody.isNotEmpty) {
-  //     existingNote.header = header;
-  //     existingNote.note = noteBody;
-  //     await box.put(existingNote.key, existingNote);
-  //   }
-  //
-  //   await BoxManager.instance.closeBox(box);
-  //   Navigator.of(context).pop();
-  // }
 
   Future<void> addNote(BuildContext context) async {
     Navigator.of(context).pushNamed(MainNavigationRoutsName.noteForm);

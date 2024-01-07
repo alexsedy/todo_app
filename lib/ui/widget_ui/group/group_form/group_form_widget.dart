@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/ui/widget_ui/group/group_form/group_form_widget_model.dart';
+import 'package:todo_app/domain/entity/group_entity.dart';
+import 'package:todo_app/ui/widget_ui/group/groups/groups_widget_model.dart';
 
 class GroupFormWidget extends StatefulWidget {
   const GroupFormWidget({super.key});
@@ -9,11 +10,11 @@ class GroupFormWidget extends StatefulWidget {
 }
 
 class _GroupFormWidgetState extends State<GroupFormWidget> {
-  final _model = GroupFormWidgetModel();
+  final _model = GroupWidgetModel();
 
   @override
   Widget build(BuildContext context) {
-    return GroupFormWidgetModelProvider(
+    return GroupsWidgetModelProvider(
       model: _model,
       child: const _GroupFormBodyWidget()
     );
@@ -25,12 +26,14 @@ class _GroupFormBodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Group? group = ModalRoute.of(context)?.settings.arguments as Group?;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add list"),
+        title: Text(group != null ? "Edit List" : "Add List"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => GroupFormWidgetModelProvider.read(context)?.model.saveGroup(context),
+        onPressed: () => GroupsWidgetModelProvider.read(context)?.model.saveGroup(context, existingGroup: group),
         child: const Icon(Icons.done),
       ),
       body: SingleChildScrollView(
@@ -40,8 +43,8 @@ class _GroupFormBodyWidget extends StatelessWidget {
             Container(height: 100,),
             _GroupIconWidget(),
             _GroupNameWidget(),
-            _GroupSelectIcon(),
-            _GroupSelectColor(),
+            _GroupSelectIcon(group: group),
+            _GroupSelectColor(group: group),
           ],
         ),
       ),
@@ -54,29 +57,37 @@ class _GroupNameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _model = GroupFormWidgetModelProvider.read(context)?.model;
+    final model = GroupsWidgetModelProvider.watch(context)?.model;
+
+    final Group? group = ModalRoute.of(context)?.settings.arguments as Group?;
+    final controller = TextEditingController(text: group?.name);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: TextField(
         textCapitalization: TextCapitalization.sentences,
+        controller: controller,
         autofocus: true,
         textInputAction: TextInputAction.done,
-        decoration: const InputDecoration(
-          hintText: "Group name"
+        decoration: InputDecoration(
+          hintText: "List name",
+          errorText: model?.errorText,
         ),
-        onChanged: (value) => _model?.groupName = value,
-        onEditingComplete: () => _model?.saveGroup(context),
+        onChanged: (value) => model?.groupName = value,
+        onEditingComplete: () => model?.saveGroup(context, existingGroup: group),
       ),
     );
   }
 }
 
 class _GroupIconWidget extends StatelessWidget {
-  const _GroupIconWidget({super.key});
+  const _GroupIconWidget({super.key,});
+
   @override
   Widget build(BuildContext context) {
-    var model = GroupFormWidgetModelProvider.watch(context)?.model;
+    var model = GroupsWidgetModelProvider.watch(context)?.model;
+    int selectedIcon = model?.selectedIcon ?? 0;
+    int selectedColor = model?.selectedColor ?? 0;
 
     return Stack(
       alignment: AlignmentDirectional.center,
@@ -84,15 +95,16 @@ class _GroupIconWidget extends StatelessWidget {
         SizedBox(
             width: 120,
             height: 120,
-            child: Card(color: IconAndColorComponent.getColorByIndex(model?.selectedColor ?? 0))),
-        Icon(IconAndColorComponent.getIconByIndex(model?.selectedIcon ?? 0), size: 90),
+            child: Card(color: IconAndColorComponent.getColorByIndex(selectedColor))),
+        Icon(IconAndColorComponent.getIconByIndex(selectedIcon), size: 90),
       ],
     );
   }
 }
 
 class _GroupSelectIcon extends StatefulWidget {
-  const _GroupSelectIcon({Key? key}) : super(key: key);
+  Group? group;
+  _GroupSelectIcon({Key? key, this.group}) : super(key: key);
 
   @override
   State<_GroupSelectIcon> createState() => _GroupSelectIconState();
@@ -100,6 +112,13 @@ class _GroupSelectIcon extends StatefulWidget {
 
 class _GroupSelectIconState extends State<_GroupSelectIcon> {
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.group?.iconValue ?? 0;
+    GroupsWidgetModelProvider.read(context)?.model.selectedIcon = selectedIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +142,7 @@ class _GroupSelectIconState extends State<_GroupSelectIcon> {
             return InkWell(
               splashColor: Colors.transparent,
               onTap: () {
-                GroupFormWidgetModelProvider.read(context)?.model.selectedIcon = index;
+                GroupsWidgetModelProvider.read(context)?.model.selectedIcon = index;
                 setState(() {
                   selectedIndex = index;
                 });
@@ -159,7 +178,8 @@ class _GroupSelectIconState extends State<_GroupSelectIcon> {
 }
 
 class _GroupSelectColor extends StatefulWidget {
-  const _GroupSelectColor({super.key});
+  Group? group;
+  _GroupSelectColor({super.key, this.group});
 
   @override
   State<_GroupSelectColor> createState() => _GroupSelectColorState();
@@ -167,6 +187,13 @@ class _GroupSelectColor extends StatefulWidget {
 
 class _GroupSelectColorState extends State<_GroupSelectColor> {
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.group?.colorValue ?? 0;
+    GroupsWidgetModelProvider.read(context)?.model.selectedColor = selectedIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +216,7 @@ class _GroupSelectColorState extends State<_GroupSelectColor> {
             return InkWell(
               splashColor: Colors.transparent,
               onTap: () {
-                GroupFormWidgetModelProvider.read(context)?.model.selectedColor = index;
+                GroupsWidgetModelProvider.read(context)?.model.selectedColor = index;
                 setState(() {
                   selectedIndex = index;
                 });

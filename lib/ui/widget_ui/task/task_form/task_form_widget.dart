@@ -35,7 +35,7 @@ class _TextFormBodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _model = TaskFormWidgetModelProvider.watch(context)?.model;
+    final model = TaskFormWidgetModelProvider.watch(context)?.model;
     final controller = TextEditingController(text: task?.text);
 
     controller.selection = TextSelection.fromPosition(
@@ -57,11 +57,12 @@ class _TextFormBodyWidget extends StatelessWidget {
                 textInputAction: TextInputAction.newline,
                 minLines: 1,
                 maxLines: 16,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: "Task",
+                  errorText: model?.errorText,
                 ),
-                onChanged: (value) => _model?.taskText = value,
-                onEditingComplete: () => _model?.saveTask(context, task),
+                onChanged: (value) => model?.taskText = value,
+                onEditingComplete: () => model?.saveTask(context, task),
               ),
             ),
             Padding(
