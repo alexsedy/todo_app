@@ -57,6 +57,13 @@ class GroupWidgetModel extends ChangeNotifier{
     await group.delete();
   }
 
+  Future<void> editGroup(Group group, BuildContext context) async {
+    final configuration = TaskWidgetModelConfiguration(
+        groupKey: group.key, title: group.name);
+
+    Navigator.of(context).pushNamed(MainNavigationRoutsName.groupsForm);
+  }
+
   Future<void> _readGroupsFromHive() async {
     _group = (await _groupBox).values.toList();
     notifyListeners();

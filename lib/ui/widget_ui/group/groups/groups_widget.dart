@@ -158,7 +158,7 @@ class _GroupRowWidget extends StatelessWidget {
             height: 195,
             width: 50,
             child: SlidableAction(
-              onPressed: (context) {},
+              onPressed: (context) => model.editGroup(group, context),
               autoClose: true,
               padding: const EdgeInsets.symmetric(horizontal: 10),
               borderRadius: BorderRadius.circular(12),

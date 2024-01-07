@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:todo_app/domain/entity/note_entity.dart';
 import 'package:todo_app/ui/widget_ui/notes/note/notes_widget_model.dart';
 
@@ -68,8 +67,6 @@ class _TextFormBodyWidget extends StatelessWidget {
               Expanded(
                 child: SingleChildScrollView(
                   child: TextField(
-                    inputFormatters: [
-                    ],
                     controller: noteBodyController,
                     textCapitalization: TextCapitalization.sentences,
                     minLines: 1,
@@ -85,31 +82,33 @@ class _TextFormBodyWidget extends StatelessWidget {
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton(onPressed: () {
-                    final text = noteBodyController.text;
-                    final newText = '$text   $i. ';
-                    noteBodyController.value = noteBodyController.value.copyWith(
-                      text: newText,
-                      selection: TextSelection.collapsed(offset: newText.length),
-                    );
-                    i++;
-                  },
-                    icon: const Icon(Icons.format_list_numbered)),
-                  IconButton(onPressed: () {
-                    final text = noteBodyController.text;
-                    final newText = '$text   • ';
-                    noteBodyController.value = noteBodyController.value.copyWith(
-                      text: newText,
-                      selection: TextSelection.collapsed(offset: newText.length),
-                    );
-                  },
-                    icon: const Icon(Icons.format_list_bulleted_rounded)),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.abc_outlined)),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz_outlined)),
-                  Container(width: 50,),
-                ],
+
+
+              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //   children: [
+              //     IconButton(onPressed: () {
+              //       final text = noteBodyController.text;
+              //       final newText = '$text   $i. ';
+              //       noteBodyController.value = noteBodyController.value.copyWith(
+              //         text: newText,
+              //         selection: TextSelection.collapsed(offset: newText.length),
+              //       );
+              //       i++;
+              //     },
+              //       icon: const Icon(Icons.format_list_numbered)),
+              //     IconButton(onPressed: () {
+              //       final text = noteBodyController.text;
+              //       final newText = '$text   • ';
+              //       noteBodyController.value = noteBodyController.value.copyWith(
+              //         text: newText,
+              //         selection: TextSelection.collapsed(offset: newText.length),
+              //       );
+              //     },
+              //       icon: const Icon(Icons.format_list_bulleted_rounded)),
+              //     IconButton(onPressed: () {}, icon: const Icon(Icons.abc_outlined)),
+              //     IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz_outlined)),
+              //     Container(width: 50,),
+              //   ],
               ),
             ],
           ),
