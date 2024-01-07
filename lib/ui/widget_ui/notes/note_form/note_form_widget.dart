@@ -82,33 +82,31 @@ class _TextFormBodyWidget extends StatelessWidget {
                 ),
               ),
               Row(
-
-
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: [
-              //     IconButton(onPressed: () {
-              //       final text = noteBodyController.text;
-              //       final newText = '$text   $i. ';
-              //       noteBodyController.value = noteBodyController.value.copyWith(
-              //         text: newText,
-              //         selection: TextSelection.collapsed(offset: newText.length),
-              //       );
-              //       i++;
-              //     },
-              //       icon: const Icon(Icons.format_list_numbered)),
-              //     IconButton(onPressed: () {
-              //       final text = noteBodyController.text;
-              //       final newText = '$text   • ';
-              //       noteBodyController.value = noteBodyController.value.copyWith(
-              //         text: newText,
-              //         selection: TextSelection.collapsed(offset: newText.length),
-              //       );
-              //     },
-              //       icon: const Icon(Icons.format_list_bulleted_rounded)),
-              //     IconButton(onPressed: () {}, icon: const Icon(Icons.abc_outlined)),
-              //     IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz_outlined)),
-              //     Container(width: 50,),
-              //   ],
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(onPressed: () {
+                    final text = noteBodyController.text;
+                    final newText = '$text   $i. ';
+                    noteBodyController.value = noteBodyController.value.copyWith(
+                      text: newText,
+                      selection: TextSelection.collapsed(offset: newText.length),
+                    );
+                    i++;
+                  },
+                    icon: const Icon(Icons.format_list_numbered)),
+                  IconButton(onPressed: () {
+                    final text = noteBodyController.text;
+                    final newText = '$text   • ';
+                    noteBodyController.value = noteBodyController.value.copyWith(
+                      text: newText,
+                      selection: TextSelection.collapsed(offset: newText.length),
+                    );
+                  },
+                    icon: const Icon(Icons.format_list_bulleted_rounded)),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.abc_outlined)),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz_outlined)),
+                  Container(width: 50,),
+                ],
               ),
             ],
           ),
