@@ -123,84 +123,88 @@ class _GroupListWidgetState extends State<_GroupListWidget> {
   }
 }
 
-class _GroupRowWidget extends StatelessWidget {
+class _GroupRowWidget extends StatefulWidget {
   final int indexInList;
   const _GroupRowWidget({super.key, required this.indexInList});
 
   @override
+  State<_GroupRowWidget> createState() => _GroupRowWidgetState();
+}
+
+class _GroupRowWidgetState extends State<_GroupRowWidget> {
+  @override
   Widget build(BuildContext context) {
-    final model = GroupsWidgetModelProvider.read(context)!.model;
-    final group = model.groups[indexInList];
-    final iconIndex = model.groups[indexInList].iconValue;
-    final colorIndex = model.groups[indexInList].colorValue;
+    final model = GroupsWidgetModelProvider.watch(context)!.model;
+    final group = model.groups[widget.indexInList];
+    final iconIndex = model.groups[widget.indexInList].iconValue;
+    final colorIndex = model.groups[widget.indexInList].colorValue;
     var completed = model.completedTasks(group);
     var uncompleted = model.uncompletedTasks(group);
 
-    return Slidable(
-      closeOnScroll: true,
-      endActionPane: ActionPane(
-        extentRatio: 0.3,
-        motion: const ScrollMotion(),
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              SizedBox(
-                height: 95,
-                width: 50,
-                child: SlidableAction(
-                  onPressed: (context) => model.deleteGroup(group),
-                  autoClose: true,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  borderRadius: BorderRadius.circular(12),
-                  backgroundColor: Colors.redAccent,
-                  foregroundColor: Colors.white,
-                  icon: Icons.delete,
-                  //label: 'Delete',
-                ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Slidable(
+        closeOnScroll: true,
+        endActionPane: ActionPane(
+          extentRatio: 0.25,
+          motion: const ScrollMotion(),
+          children: [
+            SizedBox(
+              height: 186,
+              width: 46,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SlidableAction(
+                    onPressed: (context) => model.deleteGroup(group),
+                    autoClose: true,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    borderRadius: BorderRadius.circular(12),
+                    backgroundColor: Colors.redAccent,
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete,
+                    //label: 'Delete',
+                  ),
+                  SlidableAction(
+                    onPressed: (context) => model.editGroup(group, context),
+                    autoClose: true,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    borderRadius: BorderRadius.circular(12),
+                    backgroundColor: Colors.blueGrey,
+                    foregroundColor: Colors.white,
+                    icon: Icons.edit,
+                    //label: 'Delete',
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 95,
-                width: 50,
-                child: SlidableAction(
-                  onPressed: (context) => model.editGroup(group, context),
-                  autoClose: true,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  borderRadius: BorderRadius.circular(12),
-                  backgroundColor: Colors.blueGrey,
-                  foregroundColor: Colors.white,
-                  icon: Icons.edit,
-                  //label: 'Delete',
-                ),
-              ),
-            ],
+            ),
+          ],
+        ),
+        child: Card(
+          child: ListTile(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(height: 14),
+                Container(
+                  child: Icon(
+                    IconAndColorComponent.getIconByIndex(iconIndex),
+                    size: 40,
+                    color: IconAndColorComponent.getColorByIndex(colorIndex),)),
+                Container(height: 34),
+                Text(
+                  group.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                Container(height: 6),
+                Text("$completed completed", style: const TextStyle(fontWeight: FontWeight.w300),),
+                Text("$uncompleted uncompleted", style: const TextStyle(fontWeight: FontWeight.w300),),
+              ],
+            ),
+            onTap: () => model.openGroup(context, group),
           ),
-        ],
-      ),
-      child: Card(
-        //color: IconAndColorComponent.getColorByIndex(colorIndex),
-        child: ListTile(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(height: 14),
-              Container(
-                child: Icon(
-                  IconAndColorComponent.getIconByIndex(iconIndex),
-                  size: 40,
-                  color: IconAndColorComponent.getColorByIndex(colorIndex),)),
-              Container(height: 34),
-              Text(
-                group.name,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              Container(height: 6),
-              Text("$completed completed", style: const TextStyle(fontWeight: FontWeight.w300),),
-              Text("$uncompleted uncompleted", style: const TextStyle(fontWeight: FontWeight.w300),),
-            ],
-          ),
-          onTap: () => model.openGroup(context, group),
         ),
       ),
     );

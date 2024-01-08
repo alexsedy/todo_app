@@ -158,30 +158,30 @@ class _TaskListRowWidget extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
     );
 
-
-    return Slidable(
-      endActionPane: ActionPane(
-        motion: const ScrollMotion(),
-        children: [
-          SlidableAction(
-            onPressed: (context) => (){},
-            backgroundColor: Colors.blueGrey,
-            foregroundColor: Colors.white,
-            icon: Icons.more_vert,
-            label: 'More',
-          ),
-          SlidableAction(
-            onPressed: (context) => model.deleteTask(task),
-            backgroundColor: Colors.redAccent,
-            foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: 'Delete',
-          ),
-        ],
-      ),
-      child: Padding(
-        //padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        padding: EdgeInsets.only(top: 20, left: 10, right: 10),
+    return Padding(
+      padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
+      child: Slidable(
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          children: [
+            SlidableAction(
+              borderRadius: BorderRadius.circular(12),
+              onPressed: (context) => (){},
+              backgroundColor: Colors.blueGrey,
+              foregroundColor: Colors.white,
+              icon: Icons.more_vert,
+              label: 'More',
+            ),
+            SlidableAction(
+              borderRadius: BorderRadius.circular(12),
+              onPressed: (context) => model.deleteTask(task),
+              backgroundColor: Colors.redAccent,
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              label: 'Delete',
+            ),
+          ],
+        ),
         child: Container(
           decoration: task.isDone ? unDoneDecor : doneDecor,
           child: Row(
