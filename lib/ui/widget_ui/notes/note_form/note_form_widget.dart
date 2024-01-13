@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:todo_app/domain/entity/note_entity.dart';
 import 'package:todo_app/ui/widget_ui/notes/note/notes_widget_model.dart';
 
@@ -16,13 +17,14 @@ class _NoteFormWidgetState extends State<NoteFormWidget> {
   Widget build(BuildContext context) {
     return NotesWidgetModelProvider(
       model: _model,
+      // child: _TextFormBodyWidget(),
       child: _TextFormBodyWidget(),
     );
   }
 }
 
 class _TextFormBodyWidget extends StatelessWidget {
-  const _TextFormBodyWidget({super.key});
+  _TextFormBodyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,11 @@ class _TextFormBodyWidget extends StatelessWidget {
     final headerController = TextEditingController(text: note?.header);
     final noteBodyController = TextEditingController(text: note?.note);
 
-    int i = 1;
+    String? html = '''<html><body></body></html>''';
+
+    final _controller = QuillController.basic();
+
+
 
     return Scaffold(
       appBar: AppBar(title: const Text("Add note")),
@@ -65,48 +71,41 @@ class _TextFormBodyWidget extends StatelessWidget {
                 )
               ),
               Expanded(
-                child: SingleChildScrollView(
-                  child: TextField(
-                    controller: noteBodyController,
-                    textCapitalization: TextCapitalization.sentences,
-                    minLines: 1,
-                    maxLines: 50,
-                    textInputAction: TextInputAction.newline,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Note",
-                    ),
-                    onChanged: (value) => _model?.noteBody = value,
-                    onEditingComplete: () => _model?.saveNote(context, existingNote: note),
+                child: QuillEditor.basic(
+                  configurations: QuillEditorConfigurations(
+                    placeholder: "Note",
+                    controller: _controller,
+                    readOnly: false,
+                    sharedConfigurations: const QuillSharedConfigurations(),
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton(onPressed: () {
-                    final text = noteBodyController.text;
-                    final newText = '$text   $i. ';
-                    noteBodyController.value = noteBodyController.value.copyWith(
-                      text: newText,
-                      selection: TextSelection.collapsed(offset: newText.length),
-                    );
-                    i++;
-                  },
-                    icon: const Icon(Icons.format_list_numbered)),
-                  IconButton(onPressed: () {
-                    final text = noteBodyController.text;
-                    final newText = '$text   • ';
-                    noteBodyController.value = noteBodyController.value.copyWith(
-                      text: newText,
-                      selection: TextSelection.collapsed(offset: newText.length),
-                    );
-                  },
-                    icon: const Icon(Icons.format_list_bulleted_rounded)),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.abc_outlined)),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz_outlined)),
-                  Container(width: 50,),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(right: 60, bottom: 15),
+                child: QuillToolbar.simple(
+                  configurations: QuillSimpleToolbarConfigurations(
+                    toolbarIconAlignment: WrapAlignment.start,
+                    multiRowsDisplay: false,
+                    // showColorButton: false,
+                    showFontSize: false,
+                    showDividers: false,
+                    showInlineCode: false,
+                    showFontFamily: false,
+                    showClearFormat: false,
+                    showHeaderStyle: false,
+                    showUndo: false,
+                    showRedo: false,
+                    showQuote: false,
+                    showSubscript: false,
+                    showSuperscript: false,
+                    showCodeBlock: false,
+                    showIndent: false,
+                    showLink: false,
+                    showSearchButton: false,
+                    controller: _controller,
+                    sharedConfigurations: const QuillSharedConfigurations(),
+                  ),
+                ),
               ),
             ],
           ),

@@ -57,7 +57,7 @@ class _GroupNameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = GroupsWidgetModelProvider.watch(context)?.model;
+    final model = GroupsWidgetModelProvider.read(context)?.model;
 
     final Group? group = ModalRoute.of(context)?.settings.arguments as Group?;
     final controller = TextEditingController(text: group?.name);
