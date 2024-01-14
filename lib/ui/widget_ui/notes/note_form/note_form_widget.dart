@@ -32,18 +32,22 @@ class _TextFormBodyWidget extends StatelessWidget {
 
     final Note? note = ModalRoute.of(context)?.settings.arguments as Note?;
     final headerController = TextEditingController(text: note?.header);
-    final noteBodyController = TextEditingController(text: note?.note);
 
-    String? html = '''<html><body></body></html>''';
+    List<dynamic> json = [
+      {'body': ''}
+    ];
 
-    final _controller = QuillController.basic();
+    final controller = QuillController.basic();
 
-
+    var a = controller.document.toDelta().toJson();
 
     return Scaffold(
       appBar: AppBar(title: const Text("Add note")),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => NotesWidgetModelProvider.read(context)?.model.saveNote(context, existingNote: note),
+        onPressed: () {
+          NotesWidgetModelProvider.read(context)?.model.noteBody = controller.document.toPlainText();
+          NotesWidgetModelProvider.read(context)?.model.saveNote(context, existingNote: note);
+          },
         child: const Icon(Icons.done),
       ),
       body: Padding(
@@ -74,7 +78,7 @@ class _TextFormBodyWidget extends StatelessWidget {
                 child: QuillEditor.basic(
                   configurations: QuillEditorConfigurations(
                     placeholder: "Note",
-                    controller: _controller,
+                    controller: controller,
                     readOnly: false,
                     sharedConfigurations: const QuillSharedConfigurations(),
                   ),
@@ -102,7 +106,7 @@ class _TextFormBodyWidget extends StatelessWidget {
                     showIndent: false,
                     showLink: false,
                     showSearchButton: false,
-                    controller: _controller,
+                    controller: controller,
                     sharedConfigurations: const QuillSharedConfigurations(),
                   ),
                 ),

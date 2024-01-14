@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:todo_app/domain/entity/note_entity.dart';
+import 'package:todo_app/domain/entity/task_entity.dart';
 import 'package:todo_app/ui/navigation/main_navigation.dart';
 import 'package:todo_app/utilities/box_manager.dart';
 
@@ -71,11 +72,16 @@ class NotesWidgetModel extends ChangeNotifier {
     Navigator.of(context).pushNamed(MainNavigationRoutsName.noteForm, arguments: note);
   }
 
-  Future<void> deleteNote(int noteIndex) async {
+  Future<void> deleteNote(Note note) async {
     final box = await _box;
-    final groupKey = box.keyAt(noteIndex) as int;
-    await box.delete(groupKey);
+    await box.delete(note.key);
   }
+
+  // Future<void> deleteNote(int noteIndex) async {
+  //   final box = await _box;
+  //   final groupKey = box.keyAt(noteIndex) as int;
+  //   await box.delete(groupKey);
+  // }
 
   Future<void> _readNoteFromHive() async {
     _note = (await _box).values.toList();

@@ -62,7 +62,7 @@ class _NotesRowWidget extends StatelessWidget {
             child: SlidableAction(
               autoClose: true,
               borderRadius: BorderRadius.circular(12),
-              onPressed: (context) => model.deleteNote(indexInList),
+              onPressed: (context) => model.deleteNote(note),
               backgroundColor: Colors.redAccent,
               foregroundColor: Colors.white,
               icon: Icons.delete,
