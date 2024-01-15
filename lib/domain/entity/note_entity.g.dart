@@ -17,8 +17,10 @@ class NoteAdapter extends TypeAdapter<Note> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Note(
-      header: fields[0] as String,
-      note: fields[1] as String,
+      noteHeader: fields[0] as String,
+      noteBodyJson: (fields[1] as List)
+          .map((dynamic e) => (e as Map).cast<String, dynamic>())
+          .toList(),
     );
   }
 
@@ -27,9 +29,9 @@ class NoteAdapter extends TypeAdapter<Note> {
     writer
       ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.header)
+      ..write(obj.noteHeader)
       ..writeByte(1)
-      ..write(obj.note);
+      ..write(obj.noteBodyJson);
   }
 
   @override

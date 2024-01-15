@@ -6,10 +6,10 @@ part 'note_entity.g.dart';
 class Note extends HiveObject {
 
   @HiveField(0)
-  String header;
+  String noteHeader;
 
   @HiveField(1)
-  String note;
+  List<Map<String, dynamic>> noteBodyJson;
 
-  Note({required this.header, required this.note});
+  Note({required this.noteHeader, required this.noteBodyJson});
 }

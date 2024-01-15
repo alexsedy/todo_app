@@ -12,8 +12,10 @@ class NotesWidgetModel extends ChangeNotifier {
   late final Future<Box<Note>> _box;
   ValueListenable<Object>? _listenableBox;
   var _note = <Note>[];
-  var noteBody = "";
+
   var header = "";
+  List<Map<String, dynamic>> bodyJson = [];
+  List<Map<String, dynamic>> aaaaaaaa = [{"insert" : "\n"}];
 
   NotesWidgetModel() {
     _setup();
@@ -22,7 +24,10 @@ class NotesWidgetModel extends ChangeNotifier {
   List<Note> get getNote => _note.reversed.toList();
 
   Future<void> saveNote(BuildContext context, {Note? existingNote}) async {
-    if (header.isEmpty && noteBody.isEmpty) {
+    // if (header.isEmpty && bodyJson.isEmpty) {
+    //   return;
+    // }
+    if (header.isEmpty && bodyJson.first.containsValue("\n")) {
       return;
     }
 
@@ -31,32 +36,32 @@ class NotesWidgetModel extends ChangeNotifier {
     if (existingNote != null) {
       // Case 3: Edit existing Note header
       if (header.isNotEmpty) {
-        existingNote.header = header;
+        existingNote.noteHeader = header;
         await box.put(existingNote.key, existingNote);
       }
 
       // Case 4: Edit existing Note noteBody
-      if (noteBody.isNotEmpty) {
-        existingNote.note = noteBody;
+      if (bodyJson.isNotEmpty) {
+        existingNote.noteBodyJson = bodyJson;
         await box.put(existingNote.key, existingNote);
       }
     } else {
       if(header.isEmpty) {
-        final note = Note(header: "", note: noteBody);
+        final note = Note(noteHeader: "", noteBodyJson: bodyJson);
         await box.add(note);
-      } else if (noteBody.isEmpty) {
-        final note = Note(header: header, note: "");
+      } else if (bodyJson.isEmpty) {
+        final note = Note(noteHeader: header, noteBodyJson: []);
         await box.add(note);
       } else {
-        final note = Note(header: header, note: noteBody);
+        final note = Note(noteHeader: header, noteBodyJson: bodyJson);
         await box.add(note);
       }
     }
 
     // Case 5: Edit existing Note header and noteBody
-    if (existingNote != null && header.isNotEmpty && noteBody.isNotEmpty) {
-      existingNote.header = header;
-      existingNote.note = noteBody;
+    if (existingNote != null && header.isNotEmpty && bodyJson.isNotEmpty) {
+      existingNote.noteHeader = header;
+      existingNote.noteBodyJson = bodyJson;
       await box.put(existingNote.key, existingNote);
     }
 

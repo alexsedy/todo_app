@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:todo_app/ui/widget_ui/notes/note/notes_widget_model.dart';
 
@@ -51,7 +52,13 @@ class _NotesRowWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotesWidgetModelProvider.read(context)!.model;
     final note = model.getNote[indexInList];
-    final isEmptyHeader = model.getNote[indexInList].header.isEmpty;
+    final isEmptyHeader = model.getNote[indexInList].noteHeader.isEmpty;
+
+    final noteBodyController = QuillController.basic();
+
+    if(note.noteBodyJson != null) {
+      noteBodyController.document = Document.fromJson(note.noteBodyJson);
+    }
 
     return Slidable(
       endActionPane: ActionPane(motion: const ScrollMotion(),
@@ -81,17 +88,29 @@ class _NotesRowWidget extends StatelessWidget {
                 if(!isEmptyHeader) Text(
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  note.header,
+                  note.noteHeader,
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 22,
                   ),
                 ),
                 Container(height: 10),
-                Text(
-                  note.note,
-                  maxLines: 6,
-                  overflow: TextOverflow.ellipsis,
+                Expanded(
+                  child: Stack(
+                    children: [
+                      QuillEditor.basic(
+                        configurations: QuillEditorConfigurations(
+                          controller: noteBodyController,
+                          readOnly: true,
+                          maxHeight: isEmptyHeader ? 170 : 135,
+                          sharedConfigurations: const QuillSharedConfigurations(),
+                        ),
+                      ),
+                      Container(
+                        color: Colors.transparent,
+                      ),
+                    ]
+                  ),
                 ),
               ],
             ),

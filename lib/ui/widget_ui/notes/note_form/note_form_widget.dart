@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:todo_app/domain/entity/note_entity.dart';
@@ -24,28 +26,27 @@ class _NoteFormWidgetState extends State<NoteFormWidget> {
 }
 
 class _TextFormBodyWidget extends StatelessWidget {
-  _TextFormBodyWidget({super.key});
+  const _TextFormBodyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final _model = NotesWidgetModelProvider.read(context)?.model;
+    final model = NotesWidgetModelProvider.read(context)?.model;
 
     final Note? note = ModalRoute.of(context)?.settings.arguments as Note?;
-    final headerController = TextEditingController(text: note?.header);
+    final headerController = TextEditingController(text: note?.noteHeader);
+    final noteBody = note?.noteBodyJson;
 
-    List<dynamic> json = [
-      {'body': ''}
-    ];
+    final noteBodyController = QuillController.basic();
 
-    final controller = QuillController.basic();
-
-    var a = controller.document.toDelta().toJson();
+    if(noteBody != null) {
+      noteBodyController.document = Document.fromJson(noteBody);
+    }
 
     return Scaffold(
       appBar: AppBar(title: const Text("Add note")),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          NotesWidgetModelProvider.read(context)?.model.noteBody = controller.document.toPlainText();
+          NotesWidgetModelProvider.read(context)?.model.bodyJson = noteBodyController.document.toDelta().toJson() as List<Map<String, dynamic>>;
           NotesWidgetModelProvider.read(context)?.model.saveNote(context, existingNote: note);
           },
         child: const Icon(Icons.done),
@@ -71,14 +72,14 @@ class _TextFormBodyWidget extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 22,
                   ),
-                  onChanged: (value) => _model?.header = value,
+                  onChanged: (value) => model?.header = value,
                 )
               ),
               Expanded(
                 child: QuillEditor.basic(
                   configurations: QuillEditorConfigurations(
                     placeholder: "Note",
-                    controller: controller,
+                    controller: noteBodyController,
                     readOnly: false,
                     sharedConfigurations: const QuillSharedConfigurations(),
                   ),
@@ -97,8 +98,8 @@ class _TextFormBodyWidget extends StatelessWidget {
                     showFontFamily: false,
                     showClearFormat: false,
                     showHeaderStyle: false,
-                    showUndo: false,
-                    showRedo: false,
+                    // showUndo: false,
+                    // showRedo: false,
                     showQuote: false,
                     showSubscript: false,
                     showSuperscript: false,
@@ -106,7 +107,7 @@ class _TextFormBodyWidget extends StatelessWidget {
                     showIndent: false,
                     showLink: false,
                     showSearchButton: false,
-                    controller: controller,
+                    controller: noteBodyController,
                     sharedConfigurations: const QuillSharedConfigurations(),
                   ),
                 ),
