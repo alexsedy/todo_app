@@ -122,6 +122,3 @@ class _NotesRowWidget extends StatelessWidget {
     );
   }
 }
-
-
-

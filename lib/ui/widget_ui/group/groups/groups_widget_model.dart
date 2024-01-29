@@ -37,7 +37,7 @@ class GroupWidgetModel extends ChangeNotifier{
   }
 
   void saveGroup(BuildContext context, {Group? existingGroup}) async {
-    if (groupName.isEmpty && existingGroup == null) {
+    if (groupName.trim().isEmpty && existingGroup == null) {
       errorText = "Please enter name";
       notifyListeners();
 

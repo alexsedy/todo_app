@@ -11,9 +11,12 @@ class GroupFormWidget extends StatefulWidget {
 
 class _GroupFormWidgetState extends State<GroupFormWidget> {
   final _model = GroupWidgetModel();
+  Group? group;
 
   @override
   Widget build(BuildContext context) {
+    group = ModalRoute.of(context)?.settings.arguments as Group?;
+
     return GroupsWidgetModelProvider(
       model: _model,
       child: const _GroupFormBodyWidget()
@@ -41,10 +44,10 @@ class _GroupFormBodyWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(height: 100,),
-            _GroupIconWidget(),
-            _GroupNameWidget(),
-            _GroupSelectIcon(group: group),
-            _GroupSelectColor(group: group),
+            const _GroupIconWidget(),
+            const _GroupNameWidget(),
+            const _GroupSelectIcon(),
+            const _GroupSelectColor(),
           ],
         ),
       ),
@@ -103,8 +106,7 @@ class _GroupIconWidget extends StatelessWidget {
 }
 
 class _GroupSelectIcon extends StatefulWidget {
-  Group? group;
-  _GroupSelectIcon({Key? key, this.group}) : super(key: key);
+  const _GroupSelectIcon({Key? key}) : super(key: key);
 
   @override
   State<_GroupSelectIcon> createState() => _GroupSelectIconState();
@@ -116,13 +118,14 @@ class _GroupSelectIconState extends State<_GroupSelectIcon> {
   @override
   void initState() {
     super.initState();
-    selectedIndex = widget.group?.iconValue ?? 0;
-    GroupsWidgetModelProvider.read(context)?.model.selectedIcon = selectedIndex;
+    final group = context.findRootAncestorStateOfType<_GroupFormWidgetState>()?.group;
+    selectedIndex = group?.iconValue ?? 0;
+    GroupsWidgetModelProvider.read(context)?.model.selectedColor = selectedIndex;
   }
 
   @override
   Widget build(BuildContext context) {
-    const List<IconData> _iconList = IconAndColorComponent.icons;
+    const List<IconData> iconList = IconAndColorComponent.icons;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -136,7 +139,7 @@ class _GroupSelectIconState extends State<_GroupSelectIcon> {
             mainAxisSpacing: 2.0,
             crossAxisSpacing: 2.0,
           ),
-          itemCount: _iconList.length,
+          itemCount: iconList.length,
           itemBuilder: (context, index) {
             final isSelected = index == selectedIndex;
             return InkWell(
@@ -150,10 +153,9 @@ class _GroupSelectIconState extends State<_GroupSelectIcon> {
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border:  isSelected ? Border.all(
-                    color: Colors.grey,
-                    width: 4.0,
-                  ) : null,
+                  border: isSelected
+                      ? Border.all(color: Colors.grey, width: 4.0,)
+                      : null,
                 ),
                 child: Center(
                   child: Padding(
@@ -165,7 +167,7 @@ class _GroupSelectIconState extends State<_GroupSelectIcon> {
                         shape: BoxShape.circle,
                         color: Colors.grey[200],
                       ),
-                      child: Icon(_iconList[index], size: 40)),
+                      child: Icon(iconList[index], size: 40)),
                   ),
                 ),
               ),
@@ -178,8 +180,7 @@ class _GroupSelectIconState extends State<_GroupSelectIcon> {
 }
 
 class _GroupSelectColor extends StatefulWidget {
-  Group? group;
-  _GroupSelectColor({super.key, this.group});
+  const _GroupSelectColor({super.key});
 
   @override
   State<_GroupSelectColor> createState() => _GroupSelectColorState();
@@ -191,13 +192,14 @@ class _GroupSelectColorState extends State<_GroupSelectColor> {
   @override
   void initState() {
     super.initState();
-    selectedIndex = widget.group?.colorValue ?? 0;
+    final group = context.findRootAncestorStateOfType<_GroupFormWidgetState>()?.group;
+    selectedIndex = group?.colorValue ?? 0;
     GroupsWidgetModelProvider.read(context)?.model.selectedColor = selectedIndex;
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Color> _colorList = IconAndColorComponent.colors;
+    final List<Color> colorList = IconAndColorComponent.colors;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -210,7 +212,7 @@ class _GroupSelectColorState extends State<_GroupSelectColor> {
             mainAxisSpacing: 1.0,
             crossAxisSpacing: 1.0,
           ),
-          itemCount: _colorList.length,
+          itemCount: colorList.length,
           itemBuilder: (context, index) {
             final isSelected = index == selectedIndex;
             return InkWell(
@@ -225,18 +227,17 @@ class _GroupSelectColorState extends State<_GroupSelectColor> {
                 child: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border:  isSelected ? Border.all(
-                      color: Colors.grey,
-                      width: 4.0,
-                    ) : null,
+                    border:  isSelected
+                        ? Border.all(color: Colors.grey, width: 4.0,)
+                        : null,
                   ),
-                  child: Container(
+                  child: SizedBox(
                     width: 60,
                     height: 60,
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: CircleAvatar(
-                        backgroundColor: _colorList[index],
+                        backgroundColor: colorList[index],
                       ),
                     ),
                   ),

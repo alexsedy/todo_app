@@ -25,14 +25,62 @@ class _TasksWidgetState extends State<TasksWidget> {
   @override
   Widget build(BuildContext context) {
     return TasksWidgetModelProvider(
-      model: _model,
-      child: const TasksWidgetBody());
+        model: _model,
+        child: const TasksWidgetBody());
   }
 }
 
 
-class TasksWidgetBody extends StatelessWidget {
+class TasksWidgetBody extends StatefulWidget {
   const TasksWidgetBody({super.key});
+
+  @override
+  State<TasksWidgetBody> createState() => _TasksWidgetBodyState();
+}
+
+class _TasksWidgetBodyState extends State<TasksWidgetBody> {
+  final ScrollController _scrollController = ScrollController();
+  double opacity = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    double offset = _scrollController.offset;
+
+    if (offset <= 50) {
+      setState(() {
+        opacity = 1;
+      });
+    } else if(offset <= 100) {
+      setState(() {
+        opacity = 0.5;
+      });
+    } else if (offset <= 150) {
+      setState(() {
+        opacity = 0.2;
+      });
+    } else if (offset <= 200) {
+      setState(() {
+        opacity = 0.1;
+      });
+    } else if (offset >= 270) {
+      setState(() {
+        opacity = 0.0;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +89,9 @@ class TasksWidgetBody extends StatelessWidget {
     return Scaffold(
       //appBar: AppBar(title: Text(title)),
       body: CustomScrollView(
+        controller: _scrollController,
         slivers: [
-          _HeaderList(model: taskModel),
+          _HeaderList(model: taskModel, opacity: opacity),
           _TaskListWidget(),
         ],
       ),
@@ -63,8 +112,9 @@ class TasksWidgetBody extends StatelessWidget {
 
 class _HeaderList extends StatelessWidget {
   final TasksWidgetModel? model;
+  final double opacity;
 
-  const _HeaderList({super.key, required this.model,});
+  const _HeaderList({super.key, required this.model, required this.opacity});
 
   @override
   Widget build(BuildContext context) {
@@ -83,32 +133,35 @@ class _HeaderList extends StatelessWidget {
       pinned: true,
       stretch: true,
       flexibleSpace: FlexibleSpaceBar(
-        collapseMode: CollapseMode.parallax,
+        collapseMode: CollapseMode.pin,
         title: Text(model?.configuration.title ?? "Task"),
         background: Padding(
           padding: const EdgeInsets.only(top: 200),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 70),
-                child: CircleAvatar(
-                  maxRadius: 36,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    IconAndColorComponent.getIconByIndex(model?.group?.iconValue ?? 0),
-                    size: 50,)
+          child: Opacity(
+            opacity: opacity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 70),
+                  child: CircleAvatar(
+                      maxRadius: 36,
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        IconAndColorComponent.getIconByIndex(model?.group?.iconValue ?? 0),
+                        size: 50,)
+                  ),
                 ),
-              ),
-              const SizedBox(height: 15,),
-              Padding(
-                padding: const EdgeInsets.only(left: 72),
-                child: Text(
-                  tasks ==1 ? "$tasks Task" : "$tasks Tasks",
-                  style: const TextStyle(fontSize: 20),
-                ),
-              )
-            ],
+                const SizedBox(height: 15,),
+                Padding(
+                  padding: const EdgeInsets.only(left: 72),
+                  child: Text(
+                    tasks ==1 ? "$tasks Task" : "$tasks Tasks",
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -205,8 +258,8 @@ class _TaskListRowWidget extends StatelessWidget {
                   child: Text(
                     task.text,
                     style: TextStyle(
-                      decoration: task.isDone ? TextDecoration.lineThrough : null,
-                      fontSize: 22
+                        decoration: task.isDone ? TextDecoration.lineThrough : null,
+                        fontSize: 22
                     ),
                   ),
                 ),

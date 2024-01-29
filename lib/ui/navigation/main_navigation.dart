@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/ui/widget_ui/group/group_form/group_form_widget.dart';
+import 'package:todo_app/ui/widget_ui/group/groups/groups_widget.dart';
 import 'package:todo_app/ui/widget_ui/notes/note/notes_widget.dart';
 import 'package:todo_app/ui/widget_ui/notes/note_form/note_form_widget.dart';
+import 'package:todo_app/ui/widget_ui/task/task_form/task_form_widget.dart';
+import 'package:todo_app/ui/widget_ui/task/tasks/tasks_widget.dart';
 import 'package:todo_app/ui/widget_ui/task/tasks/tasks_widget_model.dart';
-
-import '../widget_ui/group/group_form/group_form_widget.dart';
-import '../widget_ui/group/groups/groups_widget.dart';
-import '../widget_ui/task/task_form/task_form_widget.dart';
-import '../widget_ui/task/tasks/tasks_widget.dart';
 
 abstract class MainNavigationRoutsName{
   static const groups = "/";
@@ -20,10 +19,10 @@ abstract class MainNavigationRoutsName{
 
 class MainNavigation{
   final routes = <String, Widget Function(BuildContext)>{
-    MainNavigationRoutsName.groups: (context) => GroupsWidget(),
-    MainNavigationRoutsName.groupsForm: (context) => GroupFormWidget(),
-    MainNavigationRoutsName.note: (context) => NoteWidget(),
-    MainNavigationRoutsName.noteForm: (context) => NoteFormWidget(),
+    MainNavigationRoutsName.groups: (context) => const GroupsWidget(),
+    MainNavigationRoutsName.groupsForm: (context) => const GroupFormWidget(),
+    MainNavigationRoutsName.note: (context) => const NoteWidget(),
+    MainNavigationRoutsName.noteForm: (context) => const NoteFormWidget(),
   };
 
   Route<Object> onGenerateRoute(RouteSettings settings) {

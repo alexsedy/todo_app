@@ -27,7 +27,7 @@ class NotesWidgetModel extends ChangeNotifier {
     // if (header.isEmpty && bodyJson.isEmpty) {
     //   return;
     // }
-    if (header.isEmpty && bodyJson.first.containsValue("\n")) {
+    if (header.trim().isEmpty && bodyJson.first.containsValue("\n")) {
       return;
     }
 

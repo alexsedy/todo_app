@@ -11,7 +11,7 @@ class TaskFormWidgetModel extends ChangeNotifier {
   TaskFormWidgetModel({required this.groupKey});
 
   Future<void> saveTask(BuildContext context, Task? existingTask) async {
-    if (taskText.isEmpty) {
+    if (taskText.trim().isEmpty) {
       errorText = "Please enter a task";
       notifyListeners();
 
@@ -32,20 +32,6 @@ class TaskFormWidgetModel extends ChangeNotifier {
 
     Navigator.of(context).pop();
   }
-
-  // Future<void> saveTask(BuildContext context) async {
-  //   if (taskText.isEmpty) return;
-  //
-  //   final groupBox = await BoxManager.instance.openGroupBox();
-  //   final taskBox = await BoxManager.instance.openTaskBox();
-  //
-  //   final task = Task(text: taskText, isDone: false);
-  //   taskBox.add(task);
-  //   final group = groupBox.get(groupKey);
-  //   group?.addTaskHive(taskBox, task);
-  //
-  //   Navigator.of(context).pop();
-  // }
 }
 
 class TaskFormWidgetModelProvider extends InheritedNotifier {
