@@ -55,15 +55,28 @@ class _GroupFormBodyWidget extends StatelessWidget {
   }
 }
 
-class _GroupNameWidget extends StatelessWidget {
+class _GroupNameWidget extends StatefulWidget {
   const _GroupNameWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final model = GroupsWidgetModelProvider.read(context)?.model;
+  State<_GroupNameWidget> createState() => _GroupNameWidgetState();
+}
 
-    final Group? group = ModalRoute.of(context)?.settings.arguments as Group?;
-    final controller = TextEditingController(text: group?.name);
+class _GroupNameWidgetState extends State<_GroupNameWidget> {
+  Group? group;
+  final controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    group = context.findRootAncestorStateOfType<_GroupFormWidgetState>()?.group;
+    controller.text = group?.name ?? "" ;
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    final model = GroupsWidgetModelProvider.watch(context)?.model;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -120,7 +133,7 @@ class _GroupSelectIconState extends State<_GroupSelectIcon> {
     super.initState();
     final group = context.findRootAncestorStateOfType<_GroupFormWidgetState>()?.group;
     selectedIndex = group?.iconValue ?? 0;
-    GroupsWidgetModelProvider.read(context)?.model.selectedColor = selectedIndex;
+    GroupsWidgetModelProvider.read(context)?.model.selectedIcon = selectedIndex;
   }
 
   @override

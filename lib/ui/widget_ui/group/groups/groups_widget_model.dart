@@ -40,7 +40,6 @@ class GroupWidgetModel extends ChangeNotifier{
     if (groupName.trim().isEmpty && existingGroup == null) {
       errorText = "Please enter name";
       notifyListeners();
-
       return;
     }
 
