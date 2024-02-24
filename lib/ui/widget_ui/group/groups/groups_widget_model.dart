@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:todo_app/domain/entity/task_entity.dart';
+import 'package:todo_app/ui/widget_ui/task/tasks/tasks_widget.dart';
 import 'package:todo_app/ui/widget_ui/task/tasks/tasks_widget_model.dart';
 import 'package:todo_app/utilities/box_manager.dart';
 
@@ -37,7 +38,7 @@ class GroupWidgetModel extends ChangeNotifier{
   }
 
   void saveGroup(BuildContext context, {Group? existingGroup}) async {
-    if (groupName.trim().isEmpty && existingGroup == null) {
+    if (groupName.trim().isEmpty) {
       errorText = "Please enter name";
       notifyListeners();
       return;
@@ -46,18 +47,13 @@ class GroupWidgetModel extends ChangeNotifier{
     final box = await BoxManager.instance.openGroupBox();
 
     if (existingGroup != null) {
-      final oldName = existingGroup.name;
-
       existingGroup.name = groupName;
-
-      if (existingGroup.name.isEmpty) {
-        existingGroup.name = oldName;
-      }
-
       existingGroup.iconValue = _selectedIcon;
       existingGroup.colorValue = _selectedColor;
 
       await box.put(existingGroup.key, existingGroup);
+
+      Navigator.of(context).pop();
     } else {
       final group = Group(
         name: groupName,
@@ -66,11 +62,13 @@ class GroupWidgetModel extends ChangeNotifier{
       );
 
       await box.add(group);
+
+      final configuration = TaskWidgetModelConfiguration(
+          groupKey: group.key, title: group.name);
+      Navigator.of(context).popAndPushNamed(MainNavigationRoutsName.tasks, arguments: configuration);
     }
 
     await BoxManager.instance.closeBox(box);
-
-    Navigator.of(context).pop();
   }
 
   GroupWidgetModel() {
@@ -89,7 +87,7 @@ class GroupWidgetModel extends ChangeNotifier{
     final configuration = TaskWidgetModelConfiguration(
         groupKey: group.key, title: group.name);
 
-    Navigator.of(context).pushNamed(MainNavigationRoutsName.task, arguments: configuration);
+    Navigator.of(context).pushNamed(MainNavigationRoutsName.tasks, arguments: configuration);
   }
 
   Future<void> deleteGroup(Group group) async {

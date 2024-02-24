@@ -10,7 +10,7 @@ import 'package:todo_app/ui/widget_ui/task/tasks/tasks_widget_model.dart';
 abstract class MainNavigationRoutsName{
   static const groups = "/";
   static const groupsForm = "/groupsForm";
-  static const task = "/tasks";
+  static const tasks = "/tasks";
   static const taskForm = "/tasks/form";
   static const note = "/note";
   static const noteForm = "/note/form";
@@ -27,7 +27,7 @@ class MainNavigation{
 
   Route<Object> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case MainNavigationRoutsName.task:
+      case MainNavigationRoutsName.tasks:
         final configuration = settings.arguments as TaskWidgetModelConfiguration;
         return MaterialPageRoute(
           builder: (context) => TasksWidget(configuration: configuration),

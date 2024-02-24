@@ -69,8 +69,10 @@ class _GroupNameWidgetState extends State<_GroupNameWidget> {
   @override
   void initState() {
     super.initState();
-    group = context.findRootAncestorStateOfType<_GroupFormWidgetState>()?.group;
-    controller.text = group?.name ?? "" ;
+    // group = context.findRootAncestorStateOfType<_GroupFormWidgetState>()?.group;
+    group = context.findAncestorStateOfType<_GroupFormWidgetState>()?.group;
+    controller.text = group?.name ?? "";
+    GroupsWidgetModelProvider.read(context)?.model.groupName = controller.text;
   }
 
 
@@ -131,7 +133,8 @@ class _GroupSelectIconState extends State<_GroupSelectIcon> {
   @override
   void initState() {
     super.initState();
-    final group = context.findRootAncestorStateOfType<_GroupFormWidgetState>()?.group;
+    // final group = context.findRootAncestorStateOfType<_GroupFormWidgetState>()?.group;
+    final group = context.findAncestorStateOfType<_GroupFormWidgetState>()?.group;
     selectedIndex = group?.iconValue ?? 0;
     GroupsWidgetModelProvider.read(context)?.model.selectedIcon = selectedIndex;
   }
